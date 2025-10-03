@@ -7,7 +7,7 @@ local M = {}
 
 M.base46 = {
   transparency = true,
-  theme = "tokyonight",
+  theme = "chadwal", 
 
   -- start replace from rice
   hl_override = {
