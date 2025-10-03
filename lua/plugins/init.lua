@@ -6,25 +6,12 @@ return {
       require("configs.treesitter")
     end,
   },
-
   {
     "neovim/nvim-lspconfig",
-    dependencies = { 'diogo464/kubernetes.nvim' },
-    event = { "BufReadPre", "BufNewFile" },
     config = function()
-      require("nvchad.configs.lspconfig").defaults()
       require("configs.lspconfig")
     end,
   },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    event = "VeryLazy",
-    dependencies = { "nvim-lspconfig" },
-    config = function()
-      require("configs.lspconfig-mason")
-    end,
-  },
-
   {
     "mfussenegger/nvim-lint",
     event = { "BufReadPre", "BufNewFile" },
@@ -33,30 +20,12 @@ return {
     end,
   },
   {
-    "rshkarin/mason-nvim-lint",
-    event = "VeryLazy",
-    dependencies = { "nvim-lint" },
-    config = function()
-      require("configs.lint-mason")
-    end,
-  },
-
-  {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     config = function()
       require("configs.conform")
     end,
   },
-  {
-    "zapling/mason-conform.nvim",
-    event = "VeryLazy",
-    dependencies = { "conform.nvim" },
-    config = function()
-      require("configs.conform-mason")
-    end,
-  },
-
 
   -- My Plugins --
   {
