@@ -1,50 +1,70 @@
 local lint = require("lint")
 
+vim.api.nvim_create_autocmd({
+  "BufEnter",
+  "BufWritePost",
+  "InsertLeave",
+}, {
+  callback = function()
+    lint.try_lint()
+  end,
+})
+
 lint.linters_by_ft = {
   lua = { "luacheck" },
-  python = { "flake8" },
+  -- python = { "flake8" },
+  python = { "ruff" },
   shell = { "shellcheck" },
   nix = { "nix" },
-  javascript = { "eslint_d" },
-  typescript = { "eslint_d" },
+  -- WebDev --
+  -- javascript = { "eslint_d" },
+  -- typescript = { "eslint_d" },
+  -- DevOps --
   terraform = { "tflint" },
   dockerfile = { "hadolint" },
-  yaml = { "kubelint" },
-  ["yaml.docker-compose"] = { "dclint" },
-  helm = { "helmlint" },
+  -- TODO:
+  -- ["yaml.docker-compose"] = { "dclint" }, -- custom
+  helm = { "helmlint" }, -- custom
+  yaml = { "kubelint" }, -- custom
 }
 
-require("lint").linters.flake8 = {
-  cmd = vim.env.HOME .. "/.nix-profile/bin/flake8", -- Ensure the correct venv path
-  stdin = true,
-  args = {
-    '--format=%(path)s:%(row)d:%(col)d:%(code)s:%(text)s [https://www.flake8rules.com/rules/%(code)s.html]',
-    '--no-show-source',
-    '--stdin-display-name',
-    function() return vim.api.nvim_buf_get_name(0) end,
-    '-',
-  },
-  ignore_exitcode = true,
-  parser = require("lint.parser").from_pattern(
-    '[^:]+:(%d+):(%d+):(%w+):(.+)',
-    { "lnum", "col", "severity", "message" },
-    {
-      -- https://www.flake8rules.com/rules/XXXX.html
-      ['E501'] = vim.diagnostic.severity.WARN,
-      ['E303'] = vim.diagnostic.severity.ERROR,
-    },
-    {
-      ['source'] = "flake8",
-      ['severity'] = vim.diagnostic.severity.INFO, -- Default severity for unknown codes
-    }
-  ),
-}
+-- lint.linters.luacheck.args = {
+--   "--globals",
+--   "love",
+--   "vim",
+-- }
+
+-- lint.linters.flake8 = {
+--   cmd = 'flake8',
+--   stdin = true,
+--   args = {
+--     '--format=%(path)s:%(row)d:%(col)d:%(code)s:%(text)s [https://www.flake8rules.com/rules/%(code)s.html]',
+--     '--no-show-source',
+--     '--stdin-display-name',
+--     function() return vim.api.nvim_buf_get_name(0) end,
+--     '-',
+--   },
+--   ignore_exitcode = true,
+--   parser = require("lint.parser").from_pattern(
+--     '[^:]+:(%d+):(%d+):(%w+):(.+)',
+--     { "lnum", "col", "severity", "message" },
+--     {
+--       -- https://www.flake8rules.com/rules/XXXX.html
+--       ['E501'] = vim.diagnostic.severity.WARN,
+--       ['E303'] = vim.diagnostic.severity.ERROR,
+--     },
+--     {
+--       ['source'] = "flake8",
+--       ['severity'] = vim.diagnostic.severity.INFO, -- Default severity for unknown codes
+--     }
+--   ),
+-- }
 
 lint.linters.dclint = {
-  env = {
-    ["PATH"] = vim.env.HOME .. '/.local/bin' .. os.getenv("PATH"),
-  },
-  cmd = vim.env.HOME .. '/.local/bin/dclint',
+  -- env = {
+  --   ["PATH"] = vim.env.HOME .. '/.local/bin' .. os.getenv("PATH"),
+  -- },
+  -- cmd = vim.env.HOME .. '/.local/bin/dclint',
   stdin = false,          -- dclint does not take input via stdin
   append_fname = true,    -- Automatically append the filename to args
   args = {},              -- No additional arguments required
@@ -79,8 +99,8 @@ local helm_parser = require('lint.parser').from_pattern(
   }
 )
 lint.linters.helmlint = {
-  cmd = '/usr/bin/helm',
-  stdin = false,                                 -- dclint does not take input via stdin
+  cmd = 'helm',
+  stdin = false,
   append_fname = true,                           -- Automatically append the filename to args
   args_fn = function()
     local bufnr = vim.api.nvim_get_current_buf() -- Get the current buffer number
@@ -91,13 +111,12 @@ lint.linters.helmlint = {
       return {}                                  -- Return an empty argument list if no Chart.yaml is found
     end
   end,
-  stream = "stdout",      -- dclint outputs to stdout
-  ignore_exitcode = true, -- dclint might return non-zero exit codes for warnings/errors
+  stream = "stdout",
+  ignore_exitcode = true,
   parser = helm_parser,
 }
 
 lint.linters.kubelint = {
-  -- cmd = vim.env.HOME .. '/.gvm/pkgsets/go1.23.4/global/bin/kube-linter',
   cmd = 'kube-linter',
   stdin = false,       -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
   append_fname = true, -- Automatically append the file name to `args` if `stdin = false` (default: true)
@@ -116,19 +135,3 @@ lint.linters.kubelint = {
     }
   )
 }
-
-lint.linters.luacheck.args = {
-  "--globals",
-  "love",
-  "vim",
-}
-
-vim.api.nvim_create_autocmd({
-  "BufEnter",
-  "BufWritePost",
-  "InsertLeave",
-}, {
-  callback = function()
-    lint.try_lint()
-  end,
-})
