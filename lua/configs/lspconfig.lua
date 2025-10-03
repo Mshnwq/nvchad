@@ -41,7 +41,8 @@ vim.lsp.config('*', {
 local enabled_servers = {
   "bashls",
   "nixd", -- nil_ls (rust) or nixd (c++)
-  "pyright",
+  -- "pyright",
+  "ruff",
   -- "gopls",
   -- WebDev
   -- "svelte",
@@ -106,15 +107,15 @@ vim.lsp.config('yamlls', {
   },
 })
 
-vim.lsp.config('pyright', {
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = "off",
-      },
-    },
-  },
-})
+-- vim.lsp.config('pyright', {
+--   settings = {
+--     python = {
+--       analysis = {
+--         typeCheckingMode = "off",
+--       },
+--     },
+--   },
+-- })
 
 -- Handeled from vim-helm plugin
 vim.lsp.config('helm_ls', {

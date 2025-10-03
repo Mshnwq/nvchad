@@ -12,10 +12,11 @@ vim.api.nvim_create_autocmd({
 
 lint.linters_by_ft = {
   lua = { "luacheck" },
-  -- python = { "flake8" },
-  python = { "ruff" },
   shell = { "shellcheck" },
   nix = { "nix" },
+  -- python = { "flake8" },
+  python = { "ruff" },
+  -- golang = { "golangci-lint" },
   -- WebDev --
   -- javascript = { "eslint_d" },
   -- typescript = { "eslint_d" },

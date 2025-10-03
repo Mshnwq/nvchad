@@ -13,7 +13,7 @@ local function lint_yaml_selection()
   local start_line, end_line = unpack(vim.fn.getpos("'<"), 2, 3), unpack(vim.fn.getpos("'>"), 2, 3)
   local temp_file = "/tmp/nvim_selected_yaml.yaml"
   vim.cmd(start_line .. "," .. end_line .. "write! " .. temp_file)
-  local output = vim.fn.system("prettier " .. temp_file)
+  local output = vim.fn.system("prettierd " .. temp_file)
   vim.api.nvim_echo({ { output, "Normal" } }, false, {})
 end
 
@@ -40,7 +40,7 @@ vim.api.nvim_create_user_command("DockerComposeLint", function()
   local file = vim.fn.expand("%")
   vim.fn.system(
     string.format(
-      "bash -c '$HOME/.asdf/installs/nodejs/20.18.1/bin/dclint --fix %s'",
+      "dclint --fix %s'",
       file
     )
   )
@@ -63,22 +63,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
     vim.bo.filetype = "yaml"
   end
 })
--- Handled from vim-helm plugin
--- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
---   pattern = { "*/templates/*.yaml", "helmfile*.yaml" },
---   group = ft_lsp_group,
---   desc = "Fix the issue where the LSP does not start with helm type.",
---   callback = function()
---     vim.opt_local.filetype = "yaml.helm"
---   end
--- })
-
--- vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
---   pattern = { "*.ron" },
---   callback = function()
---     vim.bo.filetype = "ron"
---   end
--- })
 
 -- -----------------------------------------------------------------------------
 -- scratchterm functions
@@ -99,7 +83,7 @@ end
 
 local function get_socket_path()
   local project_name = get_project_name()
-  return string.format("/tmp/nvim-kitty-%s.sock", project_name)
+  return string.format(vim.env.XDG_RUNTIME_DIR, "/nvim-kitty-%s.sock", project_name)
 end
 local function socket_exists(socket_path)
   return uv.fs_stat(socket_path) ~= nil
@@ -118,6 +102,7 @@ local function init_term()
       "master",
     })
 
+    ---@diagnostic disable-next-line: missing-fields
     local job = uv.spawn("kitty", {
       args = {
         "--class", "nvScratchTerm",
@@ -142,6 +127,7 @@ local function init_term()
 
       -- Use a timer to wait for 2 seconds before sending commands
       local timer = io.popen("sleep " .. 2)
+      ---@diagnostic disable-next-line: need-check-nil
       timer:close()
 
       vim.fn.system({
