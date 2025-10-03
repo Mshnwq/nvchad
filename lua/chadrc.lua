@@ -5,55 +5,13 @@
 ---@type ChadrcConfig
 local M = {}
 
+
 M.base46 = {
   transparency = true,
-  theme = "chadwal", 
+  theme = "chadwal",
 
-  -- start replace from rice
-  hl_override = {
-    St_NormalMode = { bg = "#98837C" },
-    St_NormalModeSep = { fg = "#98837C", bg = "#121212" },
-    St_InsertMode = { bg = "#A99289" },
-    St_InsertModeSep = { fg = "#A99289", bg = "#121212" },
-    St_VisualMode = { bg = "#757575" },
-    St_VisualModeSep = { fg = "#757575", bg = "#121212" },
-    St_CommandMode = { bg = "#8B7871" },
-    St_CommandModeSep = { fg = "#8B7871", bg = "#121212" },
-    St_TerminalMode = { bg = "#7E8181" },
-    St_TerminalModeSep = { fg = "#7E8181", bg = "#121212" },
-    St_NTerminalMode = { bg = "#7E8181" },
-    St_NTerminalModeSep = { fg = "#7E8181", bg = "#121212" },
-    St_EmptySpace = { fg = "#98837C", bg = "#121212" },
-    St_file = { fg = "#121212", bg = "#6e5959" },
-    St_file_sep = { fg = "#6e5959" },
-    St_pos_icon = { fg = "#121212", bg = "#98837C" },
-    St_pos_sep = { fg = "#98837C", bg = "none" },
-    St_pos_text = { fg = "#121212", bg = "#6e5959" },
-    St_Lsp = { fg = "#98837C" },
-    St_LspMsg = { fg = "#98837C" },
-    TbTabOn = { fg = "#98837C", bg = "#6e5959" },
-    TbTabOff = { fg = "#121212", bg = "#6e5959" },
-  },
-  hl_add = {
-    St_Lint = { fg = "#8B7871", bg = "none" },
-    NotifyINFOIcon = { fg = "green" },
-    NotifyINFOTitle = { fg = "green" },
-    NotifyINFOBorder = { fg = "grey_fg" },
-    NotifyERRORIcon = { fg = "red" },
-    NotifyERRORTitle = { fg = "red" },
-    NotifyERRORBorder = { fg = "grey_fg" },
-    NotifyWARNIcon = { fg = "yellow" },
-    NotifyWARNTitle = { fg = "yellow" },
-    NotifyWARNBorder = { fg = "grey_fg" },
-    TodoError = { fg = "red" },
-    TodoWarn = { fg = "#BFA1FF" },
-    TodoInfo = { fg = "yellow" },
-    TodoHint = { fg = "green" },
-    TodoTest = { fg = "cyan" },
-    TodoDefault = { fg = "grey_fg" },
-  },
-  -- end replace from rice
-  -- print(dofile(vim.g.base46_cache .. "colors").yellow)
+  hl_override = require("chadrc_pywal").pywal.hl_override,
+  hl_add = require("chadrc_pywal").pywal.hl_add
 }
 
 _G.sep_ul = ""
@@ -78,7 +36,7 @@ M.ui = {
         local result, tabs = "", fn.tabpagenr("$")
         if tabs > 1 then
           for nr = 1, tabs, 1 do
-      	    local tab_hl = "TabO" .. (nr == fn.tabpagenr() and "n" or "ff")
+            local tab_hl = "TabO" .. (nr == fn.tabpagenr() and "n" or "ff")
             result = result .. btn(" " .. nr .. " ", tab_hl, "GotoTab", nr)
           end
           local small_btn = btn(" ", "TabTitle", "ToggleTabs")
@@ -90,7 +48,7 @@ M.ui = {
       end,
     },
   },
-  
+
   statusline = {
     order = { "mode", "file", "git", "%=", "lsp_msg", "%=", "diagnostics", "lint", "lsp", "cursor" },
     modules = {
