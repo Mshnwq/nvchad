@@ -25,6 +25,7 @@ local options = {
     -- gotmpl = { "gofumpt", "goimports-reviser" },
     yaml = { "prettierd" },
     yml = { "prettierd" },
+    dockerfile = { "dockerfile-utils" },
     -- javascript = { "prettierd" },
     -- typescript = { "prettierd" },
     -- css = { "prettierd" },
@@ -38,6 +39,7 @@ local options = {
       command = "shfmt",
       args = { "-i", "2", "-filename", "$FILENAME" },
     },
+    ["dockerfile-utils"] = {},
     golines = {
       prepend_args = { "--max-len=80" },
     },

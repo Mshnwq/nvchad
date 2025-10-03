@@ -40,7 +40,7 @@ vim.lsp.config('*', {
 -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
 local enabled_servers = {
   "bashls",
-  "nixd", -- nil_ls (rust) or nixd (c++)
+  "nil_ls", -- nil_ls (rust) or nixd (c++)
   -- "pyright",
   "ruff",
   -- "gopls",

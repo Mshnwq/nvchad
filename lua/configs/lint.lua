@@ -23,17 +23,16 @@ lint.linters_by_ft = {
   -- DevOps --
   terraform = { "tflint" },
   dockerfile = { "hadolint" },
-  -- TODO:
-  -- ["yaml.docker-compose"] = { "dclint" }, -- custom
+  ["yaml.docker-compose"] = { "dclint" }, -- custom
   helm = { "helmlint" }, -- custom
   yaml = { "kubelint" }, -- custom
 }
 
--- lint.linters.luacheck.args = {
---   "--globals",
---   "love",
---   "vim",
--- }
+lint.linters.luacheck.args = {
+  "--globals",
+  "love",
+  "vim",
+}
 
 -- lint.linters.flake8 = {
 --   cmd = 'flake8',
@@ -62,10 +61,7 @@ lint.linters_by_ft = {
 -- }
 
 lint.linters.dclint = {
-  -- env = {
-  --   ["PATH"] = vim.env.HOME .. '/.local/bin' .. os.getenv("PATH"),
-  -- },
-  -- cmd = vim.env.HOME .. '/.local/bin/dclint',
+  cmd = 'dclint',
   stdin = false,          -- dclint does not take input via stdin
   append_fname = true,    -- Automatically append the filename to args
   args = {},              -- No additional arguments required
