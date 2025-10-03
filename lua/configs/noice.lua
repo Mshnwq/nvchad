@@ -25,27 +25,27 @@ require("noice").setup({
   views = {
     cmdline_popup = {
       position = {
-        row = 26,
+        row = "80%",
         col = "50%",
       },
       size = {
-        width = 50,
+        width = "25%",
         height = "auto",
       },
     },
     popupmenu = {
       relative = "editor",
+      anchor = "NE",
       position = {
-        row = 26,
-        col = "50%",
+        row = "80%",
+        col = "37.5%",
       },
       size = {
-        width = 30,
-        height = 8,
+        width = "auto",
+        height = "auto",
       },
       border = {
         style = "rounded",
-        padding = { 0, 1 },
       },
       win_options = {
         winhighlight = {
