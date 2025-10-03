@@ -48,7 +48,7 @@ local enabled_servers = {
   -- "eslint",
   -- "ts_ls",
   -- DevOps
-  -- "helm_ls",
+  "helm_ls",
   "terraformls",
   "yamlls",
   "gitlab_ci_ls",
@@ -117,17 +117,6 @@ vim.lsp.config('pyright', {
 })
 
 -- Handeled from vim-helm plugin
--- vim.lsp.config('helm_ls', {
---   settings = {
---     ['helm-ls'] = {
---       yamlls = {
---         path = "yaml-language-server",
---       }
---     }
---   },
---   filetypes = { "yaml.helm" },
---   cmd = { "helm_ls", "serve" },
---   root_dir = function(fname)
---     return require('lspconfig.util').root_pattern("Chart.yaml")(fname)
---   end,
--- })
+vim.lsp.config('helm_ls', {
+  filetypes = { 'helm', 'yaml.helm-values', 'mustache' },
+})

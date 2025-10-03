@@ -44,3 +44,5 @@ local options = {
 }
 
 require("nvim-treesitter.configs").setup(options)
+
+vim.treesitter.language.register('gotmpl', 'mustache')
