@@ -1,3 +1,4 @@
+-- TODO: and cmp
 require "nvchad.autocmds"
 
 local highlight_group = vim.api.nvim_create_augroup('yankhighlight', { clear = true })

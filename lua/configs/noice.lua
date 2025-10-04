@@ -25,7 +25,7 @@ require("noice").setup({
   views = {
     cmdline_popup = {
       position = {
-        row = "80%",
+        row = "90%",
         col = "50%",
       },
       size = {
@@ -37,7 +37,7 @@ require("noice").setup({
       relative = "editor",
       anchor = "NE",
       position = {
-        row = "80%",
+        row = "90%",
         col = "37.5%",
       },
       size = {
