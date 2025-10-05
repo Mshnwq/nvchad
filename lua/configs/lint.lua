@@ -34,32 +34,6 @@ lint.linters.luacheck.args = {
   "vim",
 }
 
--- lint.linters.flake8 = {
---   cmd = 'flake8',
---   stdin = true,
---   args = {
---     '--format=%(path)s:%(row)d:%(col)d:%(code)s:%(text)s [https://www.flake8rules.com/rules/%(code)s.html]',
---     '--no-show-source',
---     '--stdin-display-name',
---     function() return vim.api.nvim_buf_get_name(0) end,
---     '-',
---   },
---   ignore_exitcode = true,
---   parser = require("lint.parser").from_pattern(
---     '[^:]+:(%d+):(%d+):(%w+):(.+)',
---     { "lnum", "col", "severity", "message" },
---     {
---       -- https://www.flake8rules.com/rules/XXXX.html
---       ['E501'] = vim.diagnostic.severity.WARN,
---       ['E303'] = vim.diagnostic.severity.ERROR,
---     },
---     {
---       ['source'] = "flake8",
---       ['severity'] = vim.diagnostic.severity.INFO, -- Default severity for unknown codes
---     }
---   ),
--- }
-
 lint.linters.dclint = {
   cmd = 'dclint',
   stdin = false,          -- dclint does not take input via stdin
