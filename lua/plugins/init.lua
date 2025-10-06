@@ -13,7 +13,8 @@ return {
 		end,
 	},
 	{
-		"mfussenegger/nvim-lint",
+		"mshnwq/nvim-lint",
+		-- "mfussenegger/nvim-lint",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("configs.lint")
