@@ -61,9 +61,9 @@ local enabled_servers = {
 	-- "ruff",
 	-- "gopls",
 	-- WebDev
-	-- "svelte",
+	"svelte",
 	-- "eslint",
-	-- "ts_ls",
+	"ts_ls",
 	-- DevOps
 	"helm_ls",
 	"terraformls",

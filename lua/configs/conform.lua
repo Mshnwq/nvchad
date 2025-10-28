@@ -25,11 +25,12 @@ return {
 			-- gowork = { "gofumpt", "goimports-reviser" },
 			-- gotmpl = { "gofumpt", "goimports-reviser" },
 			-- web --
-			-- javascript = { "prettierd" },
-			-- typescript = { "prettierd" },
-			-- css = { "prettierd" },
-			-- html = { "prettierd" },
-			-- json = { "prettierd" },
+			javascript = { "prettierd" },
+			typescript = { "prettierd" },
+			svelte = { "prettierd" },
+			css = { "prettierd" },
+			html = { "prettierd" },
+			json = { "prettierd" },
 			-- devops --
 			yaml = { "prettierd" },
 			yml = { "prettierd" },

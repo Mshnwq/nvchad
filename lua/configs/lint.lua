@@ -14,16 +14,16 @@ lint.linters_by_ft = {
   lua = { "luacheck" },
   shell = { "shellcheck" },
   nix = { "nix" },
-  -- python = { "flake8" },
   python = { "ruff" },
   -- golang = { "golangci-lint" },
   -- WebDev --
-  -- javascript = { "eslint_d" },
-  -- typescript = { "eslint_d" },
+  javascript = { "eslint_d" },
+  typescript = { "eslint_d" },
+  svelte = { "eslint_d" },
   -- DevOps --
   terraform = { "tflint" },
   dockerfile = { "hadolint" },
-  ["yaml.docker-compose"] = { "dclint" }, -- custom
+  ["yaml.docker-compose"] = { "dclint" }, -- custom (my fork merged)
   helm = { "helmlint" }, -- custom
   yaml = { "kubelint" }, -- custom
 }
