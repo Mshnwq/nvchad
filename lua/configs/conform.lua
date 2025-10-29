@@ -25,6 +25,7 @@ return {
 			-- gowork = { "gofumpt", "goimports-reviser" },
 			-- gotmpl = { "gofumpt", "goimports-reviser" },
 			-- web --
+ 			nginx = { "nginxfmt" },
 			javascript = { "prettierd" },
 			typescript = { "prettierd" },
 			svelte = { "prettierd" },

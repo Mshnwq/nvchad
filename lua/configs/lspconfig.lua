@@ -58,12 +58,11 @@ local enabled_servers = {
 	"bashls",
 	"nil_ls", -- nil_ls (rust) or nixd (c++)
 	"pyright",
-	-- "ruff",
 	-- "gopls",
 	-- WebDev
 	"svelte",
-	-- "eslint",
 	"ts_ls",
+	"nginx_language_server",
 	-- DevOps
 	"helm_ls",
 	"terraformls",
