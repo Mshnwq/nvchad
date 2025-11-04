@@ -131,3 +131,23 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		vim.opt_local.spell = false
 	end,
 })
+
+-- Toggle boolean string under cursor
+vim.api.nvim_create_user_command("ToggleBoolean", function()
+	local line = vim.api.nvim_get_current_line()
+	local new_line = line
+	-- Try each replacement in order
+	if line:find("true") then
+		new_line = line:gsub("true", "false")
+	elseif line:find("false") then
+		new_line = line:gsub("false", "true")
+	elseif line:find("True") then
+		new_line = line:gsub("True", "False")
+	elseif line:find("False") then
+		new_line = line:gsub("False", "True")
+	else
+		print("No boolean found on line")
+		return
+	end
+	vim.api.nvim_set_current_line(new_line)
+end, { desc = "Toggle Boolean String" })
