@@ -206,6 +206,8 @@ map("n", "<leader>tdt", "<cmd>TodoTelescope<CR>", { desc = "Telescope TODO" })
 map("n", "<leader>tdl", "<cmd>TodoLocList<CR>", { desc = "Local TODO" })
 map("n", "<leader>tdg", "<cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
 
-map("n", "<leader>tg", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
+map("n", "<leader>tw", "<cmd>!sh ~/.config/dots/scripts/executer/.wal_nvchad.sh<CR>", { desc = "Refresh Wal" })
+
+map("n", "tb", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 
 map("n", "<leader>mv", "<cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
