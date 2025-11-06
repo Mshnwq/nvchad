@@ -2,12 +2,38 @@ require("nvchad.autocmds")
 
 local highlight_group = vim.api.nvim_create_augroup("yankhighlight", { clear = true })
 vim.api.nvim_create_autocmd("textyankpost", {
+	group = highlight_group,
+	pattern = "*",
 	callback = function()
 		vim.highlight.on_yank()
 	end,
+})
+vim.api.nvim_create_autocmd("TextYankPost", {
 	group = highlight_group,
 	pattern = "*",
+	callback = function()
+		local ev = vim.v.event
+		if ev.operator == "y" or ev.operator == "d" then
+			vim.fn.system("wl-copy", vim.fn.getreg('"'))
+		end
+	end,
 })
+
+-- Paste from system clipboard with Ctrl-V newline cleanup
+vim.keymap.set("n", '"+p', function()
+	local paste = vim.fn.system("wl-paste --no-newline")
+	paste = string.gsub(paste, "\r", "")
+	vim.fn.setreg('"', paste)
+	vim.cmd("normal! p")
+end, { noremap = true, silent = true })
+
+-- Paste from primary selection
+vim.keymap.set("n", '"*p', function()
+	local paste = vim.fn.system("wl-paste --no-newline --primary")
+	paste = string.gsub(paste, "\r", "")
+	vim.fn.setreg('"', paste)
+	vim.cmd("normal! p")
+end, { noremap = true, silent = true })
 
 -- -----------------------------------------------------------------------------
 -- filetype functions

@@ -35,7 +35,9 @@ map("n", ";", ":", { desc = "CMD enter command mode" })
 map("n", "<A-k>", "<cmd>t-1<CR>")
 map("n", "<A-j>", "<cmd>t.<CR>")
 
-map({ "n", "i" }, "<C-x>", "<cmd>d<CR>")
+-- Change without overwriting registers or clipboard
+vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true })
+vim.keymap.set({ "n", "x" }, "C", '"_C', { noremap = true })
 
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
