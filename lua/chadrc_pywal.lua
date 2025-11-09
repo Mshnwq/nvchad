@@ -38,7 +38,7 @@ M.pywal = {
     NotifyWARNTitle = { fg = "yellow" },
     NotifyWARNBorder = { fg = "grey_fg" },
     TodoError = { fg = "red" },
-    TodoWarn = { fg = "#BFA1FF" },
+    TodoWarn = { fg = "red" },
     TodoInfo = { fg = "yellow" },
     TodoHint = { fg = "green" },
     TodoTest = { fg = "cyan" },

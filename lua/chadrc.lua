@@ -44,8 +44,9 @@ M.ui = {
 					end
 					local small_btn = btn(" ", "TabTitle", "ToggleTabs")
 					local new_tabtn = btn("%#St_file_sep#" .. sep_ul .. "%#St_pos_text# 󰐕 ", "TabNewBtn", "NewTab")
-					local tabstoggleBtn = btn("%#St_pos_text# TABS ", "TabTitle", "ToggleTabs")
-					return g.TbTabsToggled == 1 and small_btn or new_tabtn .. result .. tabstoggleBtn
+					-- local tabstoggleBtn = btn("%#St_pos_text# TABS ", "TabTitle", "ToggleTabs")
+					-- return g.TbTabsToggled == 1 and small_btn or new_tabtn .. result .. tabstoggleBtn
+					return g.TbTabsToggled == 1 and small_btn or new_tabtn .. result
 				end
 				return ""
 			end,
