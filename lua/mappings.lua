@@ -76,6 +76,14 @@ nomap("n", "<leader>cm")
 map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
 map("n", "<leader>gs", "<cmd>!Serie<CR>", { desc = "Refresh Wal" })
 
+-- Tabs
+map("n", "<leader>t.", "<cmd> tabnext <cr>", { desc = "Next Tab" })
+map("n", "<leader>t,", "<cmd> tabprev <cr>", { desc = "Prev Tab" })
+map("n", "<leader>tc", "<cmd> tabnew <cr>", { desc = "New Tab" })
+map("n", "<leader>tC", "<cmd> tabedit % <cr>", { desc = "New Tab on file" })
+map("n", "<leader>tq", "<cmd> tabclose <cr>", { desc = "Close Tab" })
+-- map("n", "<leader>tl", "<cmd> tab <CR>", { desc = "Last Tab" })
+
 -- Windows
 map("n", "<leader><A-->", "<cmd> sp <cr>", { desc = "Split window horizontally" })
 map("n", "<leader><A-\\>", "<cmd> vsp <cr>", { desc = "Split window vertically" })
