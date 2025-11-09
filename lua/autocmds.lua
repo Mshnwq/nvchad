@@ -177,3 +177,17 @@ vim.api.nvim_create_user_command("ToggleBoolean", function()
 	end
 	vim.api.nvim_set_current_line(new_line)
 end, { desc = "Toggle Boolean String" })
+
+-- switching to last active tab
+-- https://stackoverflow.com/a/72907994
+vim.api.nvim_create_autocmd("TabLeave", {
+	pattern = "*",
+	callback = function()
+		vim.api.nvim_set_keymap(
+			"n",
+			"<leader>tl",
+			"<cmd>tabn " .. vim.api.nvim_tabpage_get_number(0) .. "<CR>",
+			{ noremap = true, silent = true }
+		)
+	end,
+})
