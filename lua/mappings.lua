@@ -20,6 +20,18 @@ map("n", "<leader><leader>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
 end, { desc = "Last Buffer" })
 
+map("n", "<leader>[", "<cmd>t-1<CR>")
+map("n", "<leader>]", "<cmd>t.<CR>")
+
+-- In visual mode, paste over selected text WITHOUT yanking the deleted text
+map("x", "p", [["_dP]])
+map("n", "x", '"_x') -- use x or X in Visual mode to cut
+
+-- Change without overwriting registers or clipboard
+map({ "n", "v" }, "d", '"_d')
+map({ "n", "v" }, "D", '"_D')
+map({ "n", "v", "x" }, "c", '"_c', { noremap = true })
+map({ "n", "v", "x" }, "C", '"_C', { noremap = true })
 
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
