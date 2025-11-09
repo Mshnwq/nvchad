@@ -219,3 +219,14 @@ map("n", "<leader>tw", "<cmd>!sh ~/.config/dots/scripts/executer/.wal_nvchad.sh<
 map("n", "tb", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 
 map("n", "<leader>mv", "<cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
+
+map("n", "<leader><A-x>", "<cmd>!chmod +x %<CR>", { silent = true })
+
+-- replace template
+map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+
+-- centering
+map("n", "n", "nzzzv")
+map("n", "N", "Nzzzv")
+map("n", "<C-d>", "<C-d>zz")
+map("n", "<C-u>", "<C-u>zz")
