@@ -1,47 +1,15 @@
 require("nvchad.mappings")
 
--- <tab>
--- <S-tab>
--- <A-tab>
-
 local map = vim.keymap.set
 local nomap = vim.keymap.del
 
--- vim.api.nvim_set_keymap("n", "S", "A", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "A", "I", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "s", "a", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "a", "i", { noremap = true, silent = true })
---
--- vim.api.nvim_set_keymap("n", "E", "W", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "e", "w", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "W", "B", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "w", "b", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "E", "W", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "e", "w", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "W", "B", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "w", "b", { noremap = true, silent = true })
---
--- vim.api.nvim_set_keymap("n", "J", "L", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "J", "L", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "K", "H", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "K", "H", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "L", "$", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "L", "$", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "H", "^", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "H", "^", { noremap = true, silent = true })
-
 map("n", ";", ":", { desc = "CMD enter command mode" })
 
-map("n", "<A-k>", "<cmd>t-1<CR>")
-map("n", "<A-j>", "<cmd>t.<CR>")
 
--- Change without overwriting registers or clipboard
-vim.keymap.set({ "n", "x" }, "c", '"_c', { noremap = true })
-vim.keymap.set({ "n", "x" }, "C", '"_C', { noremap = true })
 
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
-map("n", "<leader>nn", "<cmd>set nu!<CR>", { desc = "toggle line number" })
+map("n", "<leader>nt", "<cmd>set nu!<CR>", { desc = "toggle line number" })
 map("n", "<leader>nr", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
 
 map("n", "<leader>mp", function()
@@ -51,7 +19,7 @@ map("n", "<leader>mp", function()
 		timeout_ms = 500,
 	})
 end, { desc = "Format file or range" })
-map("v", "<leader>mp", "<cmd>FormatYaml<CR>", { desc = "Format yaml range" })
+-- map("v", "<leader>mp", "<cmd>FormatYaml<CR>", { desc = "Format yaml range" })
 
 map("n", "<leader>tt", function()
 	require("base46").toggle_transparency()
@@ -80,13 +48,7 @@ nomap("n", "<leader>fm")
 map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
 nomap("n", "<leader>cm")
 map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-
--- Tabs
-map("n", "<leader><A-.>", "<cmd> tabnext <cr>", { desc = "Next Tab" })
-map("n", "<leader><A-,>", "<cmd> tabprev <cr>", { desc = "Prev Tab" })
-map("n", "<leader><A-c>", "<cmd> tabnew <cr>", { desc = "New Tab" })
-map("n", "<leader><A-C>", "<cmd> tabedit % <cr>", { desc = "New Tab on file" })
-map("n", "<leader><A-q>", "<cmd> tabclose <cr>", { desc = "Close Tab" })
+map("n", "<leader>gs", "<cmd>!Serie<CR>", { desc = "Refresh Wal" })
 
 -- Windows
 map("n", "<leader><A-->", "<cmd> sp <cr>", { desc = "Split window horizontally" })
@@ -129,7 +91,7 @@ nomap("n", "<C-n>")
 map("n", "<C-e>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 
 -- Notifications
-map("n", "<leader>cn", "<cmd>lua require('notify').dismiss()<CR>", { desc = "Dismiss notifications" })
+map("n", "<leader>nn", "<cmd>lua require('notify').dismiss()<CR>", { desc = "Dismiss notifications" })
 
 -- Terminal mappings
 nomap("n", "<leader>h")
@@ -139,20 +101,32 @@ nomap({ "n", "t" }, "<A-h>")
 nomap({ "n", "t" }, "<A-i>")
 nomap("n", "<leader>pt")
 
--- map("n", "<A-=>", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
+-- Helper function to get preferred shell
+local function get_shell()
+	local current_shell = vim.o.shell
+	-- If current shell is bash (devenv), use zsh instead
+	if current_shell:match("bash$") then
+		return "zsh"
+	end
+	return ""
+end
+
+map("n", "<A-=>", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
 map({ "n", "t" }, "<A-\\>", function()
-	require("nvchad.term").toggle({ pos = "vsp", id = "vtoggleTerm", size = 0.325 })
+	require("nvchad.term").toggle({ pos = "vsp", id = "vtoggleTerm", size = 0.325, cmd = get_shell() })
 end, { desc = "vterm" })
 map({ "n", "t" }, "<A-->", function()
-	require("nvchad.term").toggle({ pos = "sp", id = "htoggleTerm", size = 0.275 })
+	require("nvchad.term").toggle({ pos = "sp", id = "htoggleTerm", size = 0.275, cmd = get_shell() })
 end, { desc = "hterm" })
 map({ "n", "t" }, "<A-f>", function()
-	require("nvchad.term").toggle({ pos = "float", id = "floatTerm" })
+	require("nvchad.term").toggle({ pos = "float", id = "floatTerm", cmd = get_shell() })
 end, { desc = "floating term" })
-map({ "n", "t" }, "<A-|>", function()
+
+map({ "n", "t" }, "<A-]>", function()
 	require("nvchad.term").toggle({
 		pos = "float",
 		id = "vfloatTerm",
+		cmd = get_shell(),
 		float_opts = {
 			row = 0.05,
 			col = 0.8,
@@ -161,10 +135,12 @@ map({ "n", "t" }, "<A-|>", function()
 		},
 	})
 end, { desc = "floating vterm" })
-map({ "n", "t" }, "<A-_>", function()
+
+map({ "n", "t" }, "<A-[>", function()
 	require("nvchad.term").toggle({
 		pos = "float",
 		id = "hfloatTerm",
+		cmd = get_shell(),
 		float_opts = {
 			row = 0.9,
 			col = 0.15,
@@ -187,16 +163,6 @@ map(
 map("n", "<leader>gwb", "<cmd>GitWorktreeCreateExisting<CR>", { desc = "Create Existing Worktree" })
 map("n", "<leader>gwc", "<cmd>GitWorktreeCreate<CR>", { desc = "Create New Worktree" })
 
--- ScratchPad Term
-map("n", "<leader>tc", "<cmd>ScratchTermCreate<CR>", { desc = "Create ScratchTerm" })
-map("n", "<leader>gb", "<cmd>ScratchTermBranch<CR>", { desc = "Serie Branch ScratchTerm" })
-map("n", "<leader>gl", "<cmd>ScratchTermLazyGit<CR>", { desc = "LazyGit ScratchTerm" })
-
--- -- Copilot
--- map("n", "<leader>cs", "<cmd>Copilot<CR>", { desc = "Copilot Status" })
--- map("n", "<leader>cd", "<cmd>Copilot disable<CR>", { desc = "Disable Copilot" })
--- map("n", "<leader>ce", "<cmd>Copilot enable<CR>", { desc = "Enable Copilot" })
-
 -- Todo
 map("n", "]t", function()
 	require("todo-comments").jump_next()
@@ -208,7 +174,13 @@ map("n", "<leader>tdt", "<cmd>TodoTelescope<CR>", { desc = "Telescope TODO" })
 map("n", "<leader>tdl", "<cmd>TodoLocList<CR>", { desc = "Local TODO" })
 map("n", "<leader>tdg", "<cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
 
-map("n", "<leader>tw", "<cmd>!sh ~/.config/dots/scripts/executer/.wal_nvchad.sh<CR>", { desc = "Refresh Wal" })
+nomap("n", "<leader>ch")
+nomap("n", "<leader>tt")
+nomap("n", "<leader>th")
+map("n", "<leader>tw", "<cmd>!sh ~/.config/dots/scripts/executer/.wal_nvchad.sh<CR>", {
+	silent = true,
+	desc = "Refresh Wal",
+})
 
 map("n", "tb", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 
