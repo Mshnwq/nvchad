@@ -5,6 +5,20 @@ local nomap = vim.keymap.del
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 
+-- Focus buffer by number using tabufline (with safety check)
+for i = 1, 6 do
+	map("n", "<leader>" .. i, function()
+		local bufs = vim.t.bufs or {}
+		if bufs[i] then
+			vim.api.nvim_set_current_buf(bufs[i])
+		else
+			vim.notify("Buffer " .. i .. " doesn't exist", vim.log.levels.WARN)
+		end
+	end, { desc = "Go to buffer " .. i })
+end
+map("n", "<leader><leader>", function()
+	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
+end, { desc = "Last Buffer" })
 
 
 nomap("n", "<leader>n")
