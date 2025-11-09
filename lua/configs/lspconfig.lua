@@ -12,7 +12,7 @@ local custom_on_attach = function(_, bufnr)
 	map("n", "gt", vim.lsp.buf.type_definition, opts("Go to type definition"))
 	map("n", "gr", vim.lsp.buf.references, opts("Show references"))
 	map("n", "gh", vim.lsp.buf.hover, opts("Show hover"))
-	map("n", "<leader>ca", function()
+	map("n", "<leader>da", function()
 		require("tiny-code-action").code_action()
 	end, opts("Code action"))
 	-- Keep track of the last signature window ID

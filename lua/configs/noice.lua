@@ -5,8 +5,10 @@ require("noice").setup({
 	},
 	cmdline = {
 		format = {
-			filter = {
+			shell = {
+				pattern = "^:%s*!",
 				icon = "󰘧",
+				lang = "bash",
 			},
 		},
 	},
