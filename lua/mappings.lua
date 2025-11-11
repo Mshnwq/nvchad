@@ -20,6 +20,8 @@ map("n", "<leader><leader>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
 end, { desc = "Last Buffer" })
 
+map('n', 'zR', require('ufo').openAllFolds)
+map('n', 'zM', require('ufo').closeAllFolds)
 map("n", "|", "%")
 map("n", "<A-k>", "<cmd>t-1<CR>")
 map("n", "<A-j>", "<cmd>t.<CR>")

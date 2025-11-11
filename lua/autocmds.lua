@@ -76,41 +76,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	end,
 })
 
--- TODO: fix folding
--- vim.opt.foldmethod = "indent"
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 99
-
-local M = {}
--- function to create a list of commands and convert them to autocommands
--------- This function is taken from https://github.com/norcalli/nvim_utils
--- Modern version of nvim_create_augroups using Neovim Lua API
-function M.nvim_create_augroups(definitions)
-	for group_name, autocmds in pairs(definitions) do
-		local group = vim.api.nvim_create_augroup(group_name, { clear = true })
-		for _, def in ipairs(autocmds) do
-			local event = def[1]
-			local opts = vim.tbl_deep_extend("force", { group = group }, def[2] or {})
-			vim.api.nvim_create_autocmd(event, opts)
-		end
-	end
-end
-
-local autoCommands = {
-	open_folds = {
-		{
-			{ "BufReadPost", "FileReadPost", "VimEnter" },
-			{
-				pattern = "*",
-				command = "normal! zR",
-			},
-		},
-	},
-}
-M.nvim_create_augroups(autoCommands)
-
 -- Notification on macro start
 vim.api.nvim_create_autocmd("RecordingEnter", {
 	callback = function()
