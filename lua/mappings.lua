@@ -215,7 +215,7 @@ map("n", "<leader>tdg", "<cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
 nomap("n", "<leader>ch")
 nomap("n", "<leader>tt")
 nomap("n", "<leader>th")
-map("n", "<leader>tw", "<cmd>!sh ~/.config/dots/scripts/executer/.wal_nvchad.sh<CR>", {
+map("n", "<leader>tw", "<cmd>!sh ~/.local/bin/executer/.wal_nvchad.sh<CR>", {
 	silent = true,
 	desc = "Refresh Wal",
 })
