@@ -37,6 +37,9 @@ map({ "n", "v" }, "D", '"_D')
 map({ "n", "v", "x" }, "c", '"_c', { noremap = true })
 map({ "n", "v", "x" }, "C", '"_C', { noremap = true })
 
+map("i", "{", '{')
+map("i", "}", '}')
+
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
 map("n", "<leader>nt", "<cmd>set nu!<CR>", { desc = "toggle line number" })
