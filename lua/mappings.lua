@@ -37,8 +37,8 @@ map({ "n", "v" }, "D", '"_D')
 map({ "n", "v", "x" }, "c", '"_c', { noremap = true })
 map({ "n", "v", "x" }, "C", '"_C', { noremap = true })
 
-map("i", "{", '{')
-map("i", "}", '}')
+map("i", "{", "{", { noremap = true })
+map("i", "}", "}", { noremap = true })
 
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
@@ -84,12 +84,12 @@ map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git
 map("n", "<leader>gs", "<cmd>!Serie<CR>", { desc = "Refresh Wal" })
 
 -- Tabs
-map("n", "<leader>t.", "<cmd> tabnext <cr>", { desc = "Next Tab" })
-map("n", "<leader>t,", "<cmd> tabprev <cr>", { desc = "Prev Tab" })
-map("n", "<leader>tc", "<cmd> tabnew <cr>", { desc = "New Tab" })
-map("n", "<leader>tC", "<cmd> tabedit % <cr>", { desc = "New Tab on file" })
-map("n", "<leader>tq", "<cmd> tabclose <cr>", { desc = "Close Tab" })
--- map("n", "<leader>tl", "<cmd> tab <CR>", { desc = "Last Tab" })
+map("n", "<leader><A-.>", "<cmd> tabnext <cr>", { desc = "Next Tab" })
+map("n", "<leader><A-,>", "<cmd> tabprev <cr>", { desc = "Prev Tab" })
+map("n", "<leader><A-c>", "<cmd> tabnew <cr>", { desc = "New Tab" })
+map("n", "<leader><A-C>", "<cmd> tabedit % <cr>", { desc = "New Tab on file" })
+map("n", "<leader><A-q>", "<cmd> tabclose <cr>", { desc = "Close Tab" })
+-- map("n", "<leader><A-l>", "<cmd> tab <CR>", { desc = "Last Tab" })
 
 -- Windows
 map("n", "<leader><A-->", "<cmd> sp <cr>", { desc = "Split window horizontally" })
@@ -226,6 +226,8 @@ map("n", "<leader>tw", "<cmd>!sh ~/.local/bin/executer/.wal_nvchad.sh<CR>", {
 map("n", "tb", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 
 map("n", "<leader>mv", "<cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
+
+map("n", "<leader>ml", "<cmd>VimtexCompile<CR>", { desc = "Toggle Latex" })
 
 map("n", "<leader><A-x>", "<cmd>!chmod +x %<CR>", { silent = true })
 
