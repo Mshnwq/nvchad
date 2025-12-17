@@ -257,5 +257,5 @@ map("n", "<C-.>", "@:", { noremap = true })
 -- [[ word ]] -> (( word ))
 rmap("n", '<leader>r"', ':exe "norm viwxi\\"\\"\\<esc>hp"') --exe treats with my custom
 rmap("n", "<leader>r'", ':norm F"xf"x')
-rmap("n", "<leader>r[", ":s|\\[\\(.*\\)\\]|\\[\\[\\1\\]\\]")
+rmap("n", "<leader>r[", ':exe "norm vi[xi[]\\<esc>hp"')
 rmap("n", "<leader>r(", ":s|\\[\\[\\(.*\\)\\]\\]|((\\1))")
