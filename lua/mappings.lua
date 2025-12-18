@@ -20,11 +20,11 @@ map("n", "<leader><leader>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
 end, { desc = "Last Buffer" })
 
-map('n', 'zR', require('ufo').openAllFolds)
-map('n', 'zM', require('ufo').closeAllFolds)
+map("n", "zR", require("ufo").openAllFolds)
+map("n", "zM", require("ufo").closeAllFolds)
 map("n", "|", "%")
-map("n", "<A-k>", "<cmd>t-1<CR>")
-map("n", "<A-j>", "<cmd>t.<CR>")
+map("n", "<A-k>", "<Cmd>t-1<CR>")
+map("n", "<A-j>", "<Cmd>t.<CR>")
 
 -- In visual mode, paste over selected text WITHOUT yanking the deleted text
 map("x", "p", [["_dP]])
@@ -42,8 +42,8 @@ map("i", "}", "}", { noremap = true })
 
 nomap("n", "<leader>n")
 nomap("n", "<leader>rn")
-map("n", "<leader>nt", "<cmd>set nu!<CR>", { desc = "toggle line number" })
-map("n", "<leader>nr", "<cmd>set rnu!<CR>", { desc = "toggle relative number" })
+map("n", "<leader>nt", "<Cmd>set nu!<CR>", { desc = "toggle line number" })
+map("n", "<leader>nr", "<Cmd>set rnu!<CR>", { desc = "toggle relative number" })
 
 map("n", "<leader>mp", function()
 	require("conform").format({
@@ -52,13 +52,9 @@ map("n", "<leader>mp", function()
 		timeout_ms = 500,
 	})
 end, { desc = "Format file or range" })
--- map("v", "<leader>mp", "<cmd>FormatYaml<CR>", { desc = "Format yaml range" })
+-- map("v", "<leader>mp", "<Cmd>FormatYaml<CR>", { desc = "Format yaml range" })
 
-map("n", "<leader>tt", function()
-	require("base46").toggle_transparency()
-end, { desc = "Toggle transparency" })
-
-map("n", "<leader>do", "<cmd> lua vim.diagnostic.open_float() <cr>", { desc = "Show diagnostic" })
+map("n", "<leader>do", "<Cmd> lua vim.diagnostic.open_float() <CR>", { desc = "Show diagnostic" })
 map("n", "<leader>dc", function()
 	local line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- get current line (0-indexed)
 	local diagnostics = vim.diagnostic.get(0, { lnum = line })
@@ -74,28 +70,28 @@ map("n", "<leader>dc", function()
 		vim.notify("No diagnostics on this line", vim.log.levels.WARN)
 	end
 end, { desc = "Copy diagnostic" })
--- map({ "n", "i" }, "<C-k>", "<cmd>lua vim.lsp.buf.hover()<cr>")
+-- map({ "n", "i" }, "<C-k>", "<Cmd>lua vim.lsp.buf.hover()<CR>")
 
 nomap("n", "<leader>ma")
 nomap("n", "<leader>fm")
-map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+map("n", "<leader>fm", "<Cmd>Telescope marks<CR>", { desc = "telescope find marks" })
 nomap("n", "<leader>cm")
-map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gs", "<cmd>!Serie<CR>", { desc = "Refresh Wal" })
+map("n", "<leader>gc", "<Cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+map("n", "<leader>gs", "<Cmd>!Serie<CR>", { desc = "Refresh Wal" })
 
 -- Tabs
-map("n", "<leader><A-.>", "<cmd> tabnext <cr>", { desc = "Next Tab" })
-map("n", "<leader><A-,>", "<cmd> tabprev <cr>", { desc = "Prev Tab" })
-map("n", "<leader><A-c>", "<cmd> tabnew <cr>", { desc = "New Tab" })
-map("n", "<leader><A-C>", "<cmd> tabedit % <cr>", { desc = "New Tab on file" })
-map("n", "<leader><A-q>", "<cmd> tabclose <cr>", { desc = "Close Tab" })
--- map("n", "<leader><A-l>", "<cmd> tab <CR>", { desc = "Last Tab" })
+map("n", "<leader><A-.>", "<Cmd> tabnext <CR>", { desc = "Next Tab" })
+map("n", "<leader><A-,>", "<Cmd> tabprev <CR>", { desc = "Prev Tab" })
+map("n", "<leader><A-c>", "<Cmd> tabnew <CR>", { desc = "New Tab" })
+map("n", "<leader><A-C>", "<Cmd> tabedit % <CR>", { desc = "New Tab on file" })
+map("n", "<leader><A-q>", "<Cmd> tabclose <CR>", { desc = "Close Tab" })
+-- map("n", "<leader><A-l>", "<Cmd> tab <CR>", { desc = "Last Tab" })
 
 -- Windows
-map("n", "<leader><A-->", "<cmd> sp <cr>", { desc = "Split window horizontally" })
-map("n", "<leader><A-\\>", "<cmd> vsp <cr>", { desc = "Split window vertically" })
+map("n", "<leader>X", "<Cmd> %bd|e# <CR>", { desc = "buffer close all" })
+map("n", "<leader><A-->", "<Cmd> sp <CR>", { desc = "Split window horizontally" })
+map("n", "<leader><A-\\>", "<Cmd> vsp <CR>", { desc = "Split window vertically" })
 map("n", "<leader><A-w>", "<C-w>q", { desc = "Close Window" })
-map("n", "<leader>X", "<cmd> %bd|e# <cr>", { desc = "buffer close all" })
 
 -- Navigate windows
 vim.keymap.set({ "n", "t" }, "<A-Left>", function()
@@ -129,10 +125,10 @@ end, { desc = "Switch window up" })
 
 -- NvimTree
 nomap("n", "<C-n>")
-map("n", "<C-e>", "<cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+map("n", "<C-e>", "<Cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 
 -- Notifications
-map("n", "<leader>nn", "<cmd>lua require('notify').dismiss()<CR>", { desc = "Dismiss notifications" })
+map("n", "<leader>nn", "<Cmd>lua require('notify').dismiss()<CR>", { desc = "Dismiss notifications" })
 
 -- Terminal mappings
 nomap("n", "<leader>h")
@@ -152,7 +148,7 @@ local function get_shell()
 	return ""
 end
 
-map("n", "<A-=>", "<cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
+map("n", "<A-=>", "<Cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
 map({ "n", "t" }, "<A-\\>", function()
 	require("nvchad.term").toggle({ pos = "vsp", id = "vtoggleTerm", size = 0.325, cmd = get_shell() })
 end, { desc = "vterm" })
@@ -192,17 +188,17 @@ map({ "n", "t" }, "<A-[>", function()
 end, { desc = "floating hterm" })
 
 -- NeoGit
-map("n", "<leader>gn", "<cmd>Neogit<CR>", { desc = "Open NeoGit" })
+map("n", "<leader>gn", "<Cmd>Neogit<CR>", { desc = "Open NeoGit" })
 -- Worktree
 require("telescope").load_extension("worktrees")
 map(
 	"n",
 	"<leader>gws",
-	"<cmd>lua require('telescope').extensions.worktrees.list_worktrees(opts)<CR>",
+	"<Cmd>lua require('telescope').extensions.worktrees.list_worktrees(opts)<CR>",
 	{ desc = "Manage Worktree" }
 )
-map("n", "<leader>gwb", "<cmd>GitWorktreeCreateExisting<CR>", { desc = "Create Existing Worktree" })
-map("n", "<leader>gwc", "<cmd>GitWorktreeCreate<CR>", { desc = "Create New Worktree" })
+map("n", "<leader>gwb", "<Cmd>GitWorktreeCreateExisting<CR>", { desc = "Create Existing Worktree" })
+map("n", "<leader>gwc", "<Cmd>GitWorktreeCreate<CR>", { desc = "Create New Worktree" })
 
 -- Todo
 map("n", "]t", function()
@@ -211,31 +207,48 @@ end, { desc = "Next todo comment" })
 map("n", "[t", function()
 	require("todo-comments").jump_prev()
 end, { desc = "Previous todo comment" })
-map("n", "<leader>tdt", "<cmd>TodoTelescope<CR>", { desc = "Telescope TODO" })
-map("n", "<leader>tdl", "<cmd>TodoLocList<CR>", { desc = "Local TODO" })
-map("n", "<leader>tdg", "<cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
+map("n", "<leader>tdt", "<Cmd>TodoTelescope<CR>", { desc = "Telescope TODO" })
+map("n", "<leader>tdl", "<Cmd>TodoLocList<CR>", { desc = "Local TODO" })
+map("n", "<leader>tdg", "<Cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
 
 nomap("n", "<leader>ch")
-nomap("n", "<leader>tt")
+-- nomap("n", "<leader>tt")
+-- map("n", "<leader>tt", function()
+-- 	require("base46").toggle_transparency()
+-- end, { desc = "Toggle transparency" })
 nomap("n", "<leader>th")
-map("n", "<leader>tw", "<cmd>!sh ~/.local/bin/executer/.wal_nvchad.sh<CR>", {
-	silent = true,
-	desc = "Refresh Wal",
-})
+-- nomap("n", "<leader>tw")
+-- map("n", "<leader>tw", "<Cmd>!sh ~/.local/bin/executer/.wal_nvchad.sh<CR>", {
+-- 	silent = true,
+-- 	desc = "Refresh Wal",
+-- })
 
-map("n", "tb", "<cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
+map("n", "tb", "<Cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 
-map("n", "<leader>mv", "<cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
+map("n", "<leader>mv", "<Cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
 
-map("n", "<leader>ml", "<cmd>VimtexCompile<CR>", { desc = "Toggle Latex" })
+map("n", "<leader>ml", "<Cmd>VimtexCompile<CR>", { desc = "Toggle Latex" })
 
-map("n", "<leader><A-x>", "<cmd>!chmod +x %<CR>", { silent = true })
+map("n", "<leader><A-x>", "<Cmd>!chmod +x %<CR>", { silent = true })
 
 -- replace template
-map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- centering
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
+
+-- repeatable norm command
+-- https://github.com/neovim/neovim/issues/26503
+local function rmap(mode, lhs, cmd)
+	map(mode, lhs, function()
+		local cr = vim.api.nvim_replace_termcodes("<cr>", true, false, true)
+		vim.api.nvim_feedkeys(cmd .. cr, "t", false)
+	end)
+end
+
+map("n", "<C-.>", "@:", { noremap = true })
+rmap("n", "<leader>r'", ':norm F"xf"x')
+rmap("n", "<leader>r[", ":s/\\[ \\(.*\\) \\]/\\[\\[ \\1 \\]\\]/")
