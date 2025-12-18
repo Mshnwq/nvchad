@@ -156,3 +156,13 @@ vim.api.nvim_create_autocmd("TabLeave", {
 		)
 	end,
 })
+
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		local reload_flag = vim.fn.expand("~/.cache/wal/nvim_reload")
+		if vim.fn.filereadable(reload_flag) == 1 then
+			vim.cmd("!sh ~/.local/bin/executer/.wal_nvchad.sh")
+			vim.fn.delete(reload_flag)
+		end
+	end,
+})
