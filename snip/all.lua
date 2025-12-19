@@ -1,4 +1,7 @@
+local ls = require("luasnip")
+local t = ls.text_node
+
 return {
-	require("luasnip").snippet({ trig = "hi" }, { t("Hello, world!") }),
-	require("luasnip").snippet({ trig = "foo" }, { t("Another snippet.") }),
+	ls.snippet({ trig = "hi" }, { t("Hello, world!") }),
+	ls.snippet({ trig = "foo" }, { t("Another snippet.") }),
 }
