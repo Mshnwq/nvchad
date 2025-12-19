@@ -250,5 +250,12 @@ local function rmap(mode, lhs, cmd)
 end
 
 map("n", "<C-.>", "@:", { noremap = true })
+--        bash'isms
+--    word    ->   "word"
+--   "word"   ->    word
+--  [ word ]  -> [[ word ]]
+-- [[ word ]] -> (( word ))
+rmap("n", '<leader>r"', ':exe "norm viwxi\\"\\"\\<esc>hp"') --exe treats with my custom
 rmap("n", "<leader>r'", ':norm F"xf"x')
-rmap("n", "<leader>r[", ":s/\\[ \\(.*\\) \\]/\\[\\[ \\1 \\]\\]/")
+rmap("n", "<leader>r[", ":s|\\[\\(.*\\)\\]|\\[\\[\\1\\]\\]")
+rmap("n", "<leader>r(", ":s|\\[\\[\\(.*\\)\\]\\]|((\\1))")
