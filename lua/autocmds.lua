@@ -142,6 +142,24 @@ vim.api.nvim_create_user_command("ToggleBoolean", function()
 	end
 	vim.api.nvim_set_current_line(new_line)
 end, { desc = "Toggle Boolean String" })
+vim.api.nvim_create_user_command("ToggleBinary", function()
+	local line = vim.api.nvim_get_current_line()
+	local new_line = line
+	-- Try each replacement in order
+	if line:find("yes") then
+		new_line = line:gsub("yes", "no")
+	elseif line:find("no") then
+		new_line = line:gsub("no", "yes")
+	elseif line:find("Yes") then
+		new_line = line:gsub("Yes", "No")
+	elseif line:find("No") then
+		new_line = line:gsub("No", "Yes")
+	else
+		print("No binary found on line")
+		return
+	end
+	vim.api.nvim_set_current_line(new_line)
+end, { desc = "Toggle Binary String" })
 
 -- switching to last active tab
 -- https://stackoverflow.com/a/72907994

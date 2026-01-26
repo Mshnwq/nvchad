@@ -1,6 +1,6 @@
 local M = {}
 
-M.pywal = {
+M = {
   -- start replace from rice
   hl_override = {
     St_NormalMode = { bg = "#5E678F" },

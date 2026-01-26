@@ -9,8 +9,8 @@ M.base46 = {
 	transparency = true,
 	theme = "chadwal",
 
-	hl_override = require("chadrc_pywal").pywal.hl_override,
-	hl_add = require("chadrc_pywal").pywal.hl_add,
+	hl_override = require("pywal").hl_override,
+	hl_add = require("pywal").hl_add,
 }
 
 _G.sep_ul = ""
