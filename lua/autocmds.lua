@@ -161,6 +161,18 @@ vim.api.nvim_create_user_command("ToggleBinary", function()
 	vim.api.nvim_set_current_line(new_line)
 end, { desc = "Toggle Binary String" })
 
+vim.api.nvim_create_user_command("GB", function()
+	-- Extract the first https URL from the current line
+	local line = vim.api.nvim_get_current_line()
+	local url = line:match("https?://[%w%.%-%_%~%:%/%?%#%[%]%@%!%$%&%'%(%)%*%+%,%;%=]+")
+	if not url then
+		vim.notify("No URL found on current line", vim.log.levels.WARN)
+		return
+	end
+	vim.fn.system("wl-copy " .. vim.fn.shellescape(url))
+	vim.fn.jobstart("$BROWSER $(wl-paste)", { detach = true })
+end, { desc = "Stupid GX" })
+
 -- switching to last active tab
 -- https://stackoverflow.com/a/72907994
 vim.api.nvim_create_autocmd("TabLeave", {
