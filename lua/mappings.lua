@@ -232,6 +232,8 @@ map("n", "<leader>ml", "<Cmd>VimtexCompile<CR>", { desc = "Toggle Latex" })
 
 map("n", "<leader><A-x>", "<Cmd>!chmod +x %<CR>", { silent = true })
 
+map("n", "gb", "<Cmd>GB<CR>", { silent = true })
+
 -- replace template
 -- map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
@@ -259,6 +261,6 @@ map("n", "<C-.>", "@:", { noremap = true })
 -- [[ word ]] -> (( word ))
 rmap("n", '<leader>r"', ':exe "norm viwxi\\"\\"\\<esc>hp"') --exe treats with my custom
 rmap("n", "<leader>r'", ':norm F"xf"x')
-rmap("n", "<leader>r{", ':norm F{xf}x')
+rmap("n", "<leader>r{", ":norm F{xf}x")
 rmap("n", "<leader>r[", ':exe "norm vi[xi[]\\<esc>hp"')
-rmap("n", "<leader>r(", ':norm 2F[r(lr(f]r)lr)')
+rmap("n", "<leader>r(", ":norm 2F[r(lr(f]r)lr)")
