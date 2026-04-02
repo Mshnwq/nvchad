@@ -18,11 +18,22 @@ local custom_on_attach = function(_, bufnr)
 	-- Keep track of the last signature window ID
 	local sig_win_id = nil
 	-- Override handler with custom options
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-		border = "single",
-		max_height = 7,
-		focusable = false,
-		silent = true,
+	vim.lsp.config("*", {
+		handlers = {
+			["textDocument/signatureHelp"] = function(err, result, ctx, config)
+				vim.lsp.handlers["textDocument/signatureHelp"](
+					err,
+					result,
+					ctx,
+					vim.tbl_extend("force", config or {}, {
+						border = "single",
+						max_height = 7,
+						focusable = false,
+						silent = true,
+					})
+				)
+			end,
+		},
 	})
 	-- Toggle function
 	local function toggle_signature()
