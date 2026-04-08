@@ -169,6 +169,9 @@ vim.api.nvim_create_user_command("GB", function()
 		vim.notify("No URL found on current line", vim.log.levels.WARN)
 		return
 	end
+	if url then
+    url = url:gsub("%)$", "")
+	end
 	vim.fn.system("wl-copy " .. vim.fn.shellescape(url))
 	vim.fn.jobstart("$BROWSER $(wl-paste)", { detach = true })
 end, { desc = "Stupid GX" })
@@ -191,7 +194,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
 		local reload_flag = vim.fn.expand("~/.cache/wal/nvim_reload")
 		if vim.fn.filereadable(reload_flag) == 1 then
-			vim.cmd("!sh ~/.local/bin/executer/.wal_nvchad.sh")
+			vim.cmd("!sh ~/.local/bin/executer/wal.sh --theme nvchad")
 			vim.fn.delete(reload_flag)
 		end
 	end,
