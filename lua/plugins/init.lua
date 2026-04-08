@@ -13,8 +13,7 @@ return {
 		end,
 	},
 	{
-		"mshnwq/nvim-lint",
-		-- "mfussenegger/nvim-lint",
+		"mfussenegger/nvim-lint",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
 			require("configs.lint")
@@ -226,6 +225,9 @@ return {
 	{
 		"lervag/vimtex",
 		lazy = false,
+		keys = {
+			{ "<leader>ml", "<Cmd>VimtexCompile<CR>", { desc = "Toggle Latex" } },
+		},
 		init = function()
 			vim.g.vimtex_view_method = "zathura"
 			vim.g.vimtex_compiler_method = "latexmk"
@@ -243,5 +245,55 @@ return {
 				_ = "-lualatex",
 			}
 		end,
+	},
+
+	{
+		"mshnwq/obsidian.nvim", -- switch when merged
+		version = "*", --latest
+		event = {
+			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+		},
+		keys = {
+			-- { '<leader>ol', ':Obsidian link<cr>' },
+			-- { '<leader>on', ':Obsidian new<cr>' },
+			-- { '<leader>ou', ':Obsidian unique_note<cr>' },
+			-- { '<leader>ot', ':Obsidian template<cr>' },
+			-- { '<leader>oa', ':Obsidian new_from_template<cr>' },
+			{ "<leader>om", ":Obsidian toc<cr>" },
+			{ "<leader>og", ":Obsidian tags<cr>" },
+			{ "<leader>oo", ":Obsidian open<cr>" },
+			{ "<leader>oz", ":Obsidian search<cr>" },
+			{ "<leader>or", ":Obsidian rename<cr>" }, -- works updating
+			{ "<leader>ow", ":Obsidian workspace<cr>" },
+			{ "<leader>op", ":Obsidian paste_img<cr>" },
+			{ "<leader>ob", ":Obsidian backlinks<cr>" },
+			{ "<leader>of", ":Obsidian follow_link<cr>" },
+			{ "<leader>os", ":Obsidian quick_switch<cr>" },
+		},
+		opts = require("configs.obsidian"),
+	},
+
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		event = {
+			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+		},
+		keys = {
+			vim.keymap.set("n", "<leader>mt", function()
+				require("lazy").load({ plugins = { "render-markdown.nvim" } })
+				require("render-markdown").buf_toggle()
+			end, { desc = "Toggle Render Markdown" }),
+			vim.keymap.set("n", "<leader>mv", function()
+				require("lazy").load({ plugins = { "render-markdown.nvim" } })
+				require("render-markdown").preview()
+			end, { desc = "Preview Render Markdown" }),
+		},
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-mini/mini.nvim",
+		},
+		opts = require("configs.markdown"),
 	},
 }

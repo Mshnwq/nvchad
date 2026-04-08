@@ -225,13 +225,7 @@ nomap("n", "<leader>th")
 
 map("n", "tb", "<Cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 map("n", "tn", "<Cmd>ToggleBinary<CR>", { desc = "Toggle Binary String" })
-
-map("n", "<leader>mv", "<Cmd>Markview toggle<CR>", { desc = "Toggle Markview" })
-
-map("n", "<leader>ml", "<Cmd>VimtexCompile<CR>", { desc = "Toggle Latex" })
-
 map("n", "<leader><A-x>", "<Cmd>!chmod +x %<CR>", { silent = true })
-
 map("n", "gb", "<Cmd>GB<CR>", { silent = true })
 
 -- replace template
