@@ -276,14 +276,19 @@ return {
 
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		event = {
-			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-		},
+		-- script enables it
+		-- event = {
+		-- 	"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+		-- 	"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
+		-- },
 		keys = {
 			vim.keymap.set("n", "<leader>mt", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })
 				require("render-markdown").buf_toggle()
+			end, { desc = "Toggle Buffer Render Markdown" }),
+			vim.keymap.set("n", "<leader>mT", function()
+				require("lazy").load({ plugins = { "render-markdown.nvim" } })
+				require("render-markdown").toggle()
 			end, { desc = "Toggle Render Markdown" }),
 			vim.keymap.set("n", "<leader>mv", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })
@@ -295,5 +300,19 @@ return {
 			"nvim-mini/mini.nvim",
 		},
 		opts = require("configs.markdown"),
+	},
+	{
+		"hedyhli/outline.nvim",
+		lazy = true,
+		cmd = { "Outline", "OutlineOpen" },
+		keys = {
+			{ "<leader>mo", "<cmd>Outline<CR>", desc = "Toggle outline" },
+		},
+		opts = {
+			width = 10,
+			preview_window = {
+				auto_preview = true,
+			},
+		},
 	},
 }
