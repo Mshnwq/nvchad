@@ -236,6 +236,8 @@ map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
+map("n", "{", "{zz")
+map("n", "}", "}zz")
 
 -- repeatable norm command
 -- https://github.com/neovim/neovim/issues/26503

@@ -199,3 +199,25 @@ vim.api.nvim_create_autocmd("VimEnter", {
 		end
 	end,
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		local function wrap(key)
+			local orig = vim.fn.maparg(key, "n", false, true)
+			vim.keymap.set("n", key, function()
+				if orig and orig.callback then
+					orig.callback()
+				elseif orig and orig.rhs and orig.rhs ~= "" then
+					vim.cmd("normal! " .. orig.rhs)
+				else
+					vim.cmd("normal! " .. key)
+				end
+				vim.cmd("normal! zz")
+			end, { buffer = true, silent = true, desc = key .. " + center" })
+		end
+		-- centerings for markdown
+		wrap("]]")
+		wrap("[[")
+	end,
+})
