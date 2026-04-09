@@ -10,8 +10,7 @@ return {
 	footer = {
 		enabled = true,
 		hl_group = "St_Lint",
-		-- find better look
-		format = "{{backlinks}} backlinks {{outlinks}} outlinks {{words}} words {{chars}} chars",
+		format = "{{backlinks}} <- | {{words}} words {{chars}} chars | -> {{outlinks}}",
 	},
 	open = {
 		use_advanced_uri = true,
@@ -22,22 +21,16 @@ return {
 		folder = "Assets",
 		confirm_img_paste = false,
 	},
-	-- TODO:
-	-- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Autocmds
-	-- Do Autocmds to constantly match scroll with of GUI
-	-- or see callbacks = {},
-	callbacks = {
-		enter_note = function(note)
-			vim.keymap.set("n", "<leader>ch", "<cmd>Obsidian toggle_checkbox<cr>", {
-				buffer = true,
-				desc = "Toggle checkbox",
-			})
-		end,
-	},
 	checkbox = {
 		enabled = true,
 		create_new = true,
 		order = { " ", "x" },
+	},
+	frontmatter = {
+		enabled = false, -- ERRORs IDK
+	},
+	ui = {
+		enable = false,
 	},
 	-- Inserting tag/outlink is nice,
 	-- TODO: Would be nice to insert outlink paragraph as well
@@ -52,10 +45,32 @@ return {
 			insert_tag = "<C-l>",
 		},
 	},
-	frontmatter = {
-		enabled = false, -- ERRORs IDK
-		-- func = require("obsidian.builtin").frontmatter,
-		-- sort = { "id", "aliases", "tags" },
+	note_id_func = function(title)
+		if title ~= nil then
+			return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+		end
+		return nil
+	end,
+	note = {
+		template = "default.md",
+	},
+	templates = {
+		folder = "Templates",
+		date_format = "YYYY-MM-DD",
+		time_format = "HH:mm",
+		-- substitutions = { for custom values },
+	},
+	-- TODO:
+	-- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Autocmds
+	-- Do Autocmds to constantly match scroll with of GUI
+	-- or see callbacks = {},
+	callbacks = {
+		enter_note = function(note)
+			vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
+				buffer = true,
+				desc = "Toggle checkbox",
+			})
+		end,
 	},
 	daily_notes = {
 		enabled = false,
@@ -71,48 +86,4 @@ return {
 		folder = nil,
 		template = nil,
 	},
-	ui = {
-		enable = false,
-	},
-	------@class obsidian.config.NoteOpts
-	------
-	------Default template to use, relative to template.folder or an absolute path.
-	------
-	------@field template string|?
-	---note = {
-	---	template = (function()
-	---		local root = vim.iter(vim.api.nvim_list_runtime_paths()):find(function(path)
-	---			return vim.endswith(path, "obsidian.nvim")
-	---		end)
-	---		if not root then
-	---			return nil
-	---		end
-	---		return vim.fs.joinpath(root, "data/default_template.md")
-	---	end)(),
-	---},
-	-- templates = {
-	-- 	enabled = true,
-	-- 	folder = "Templates",
-	-- 	date_format = "YYYY-MM-DD",
-	-- 	time_format = "HH:mm",
-	-- 	substitutions = {
-	-- 		date = function(_, suffix)
-	-- 			local format = suffix or Obsidian.opts.templates.date_format
-	-- 			return require("obsidian.util").format_date(os.time(), format)
-	-- 		end,
-	-- 		time = function(_, suffix)
-	-- 			local format = suffix or Obsidian.opts.templates.time_format
-	-- 			return require("obsidian.util").format_date(os.time(), format)
-	-- 		end,
-	-- 		title = function(ctx)
-	-- 			return ctx.partial_note and ctx.partial_note:display_name()
-	-- 		end,
-	-- 		id = function(ctx)
-	-- 			return ctx.partial_note and ctx.partial_note.id
-	-- 		end,
-	-- 		path = function(ctx)
-	-- 			return ctx.partial_note and tostring(ctx.partial_note.path)
-	-- 		end,
-	-- 	},
-	-- },
 }
