@@ -20,11 +20,11 @@ map("n", "<leader><leader>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
 end, { desc = "Last Buffer" })
 
-map("n", "zR", require("ufo").openAllFolds)
-map("n", "zM", require("ufo").closeAllFolds)
 map("n", "|", "%")
 map("n", "<A-k>", "<Cmd>t-1<CR>")
 map("n", "<A-j>", "<Cmd>t.<CR>")
+map("n", "<A-K>", "<Cmd>normal gcc<CR><Cmd>t-1<CR><Cmd>normal gcc<CR>")
+map("n", "<A-J>", "<Cmd>normal gcc<CR><Cmd>t.<CR><Cmd>normal gcc<CR>")
 
 -- In visual mode, paste over selected text WITHOUT yanking the deleted text
 map("x", "p", [["_dP]])
@@ -127,9 +127,6 @@ end, { desc = "Switch window up" })
 nomap("n", "<C-n>")
 map("n", "<C-e>", "<Cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
 
--- Notifications
-map("n", "<leader>nn", "<Cmd>lua require('notify').dismiss()<CR>", { desc = "Dismiss notifications" })
-
 -- Terminal mappings
 nomap("n", "<leader>h")
 nomap("n", "<leader>v")
@@ -211,17 +208,17 @@ map("n", "<leader>tdt", "<Cmd>TodoTelescope<CR>", { desc = "Telescope TODO" })
 map("n", "<leader>tdl", "<Cmd>TodoLocList<CR>", { desc = "Local TODO" })
 map("n", "<leader>tdg", "<Cmd>TodoQuickFix<CR>", { desc = "Global TODO" })
 
-nomap("n", "<leader>ch")
 -- nomap("n", "<leader>tt")
 -- map("n", "<leader>tt", function()
 -- 	require("base46").toggle_transparency()
 -- end, { desc = "Toggle transparency" })
+nomap("n", "<leader>ch")
 nomap("n", "<leader>th")
--- nomap("n", "<leader>tw")
--- map("n", "<leader>tw", "<Cmd>!sh ~/.local/bin/executer/.wal_nvchad.sh<CR>", {
--- 	silent = true,
--- 	desc = "Refresh Wal",
--- })
+nomap("n", "<leader>tw")
+map("n", "<leader>tw", "<Cmd>!sh ~/.local/bin/executer/.wal.sh --theme nvchad<CR>", {
+	silent = true,
+	desc = "Refresh Wal",
+})
 
 map("n", "tb", "<Cmd>ToggleBoolean<CR>", { desc = "Toggle Boolean String" })
 map("n", "tn", "<Cmd>ToggleBinary<CR>", { desc = "Toggle Binary String" })
@@ -229,7 +226,8 @@ map("n", "<leader><A-x>", "<Cmd>!chmod +x %<CR>", { silent = true })
 map("n", "gb", "<Cmd>GB<CR>", { silent = true })
 
 -- replace template
--- map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- nomap("n", "<leader>ra")
+map("n", "<leader>rs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- centering
 map("n", "n", "nzzzv")

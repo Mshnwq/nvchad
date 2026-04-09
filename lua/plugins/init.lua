@@ -1,3 +1,5 @@
+local map = vim.keymap.set
+
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -29,6 +31,10 @@ return {
 		event = "VeryLazy",
 		dependencies = {
 			"kevinhwang91/promise-async",
+		},
+		keys = {
+			map("n", "zR", require("ufo").openAllFolds),
+			map("n", "zM", require("ufo").closeAllFolds),
 		},
 		config = function()
 			require("ufo").setup({
@@ -107,6 +113,9 @@ return {
 	},
 	{
 		"rcarriga/nvim-notify",
+		keys = {
+			map("n", "<leader>nn", require("notify").dismiss()),
+		},
 		config = function()
 			require("notify").setup({
 				background_colour = "#000000",
@@ -116,7 +125,7 @@ return {
 	{
 		"folke/noice.nvim",
 		enabled = true,
-		lazy = false, -- NOTE: NO NEED to Lazy load
+		lazy = false, -- NO NEED to Lazy load
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"rcarriga/nvim-notify",
@@ -255,42 +264,41 @@ return {
 			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
 		},
 		keys = {
-			-- { '<leader>ol', ':Obsidian link<cr>' },
-			-- { '<leader>on', ':Obsidian new<cr>' },
-			-- { '<leader>ou', ':Obsidian unique_note<cr>' },
-			-- { '<leader>ot', ':Obsidian template<cr>' },
-			-- { '<leader>oa', ':Obsidian new_from_template<cr>' },
+			{ "<leader>on", ":Obsidian new<cr>" },
 			{ "<leader>om", ":Obsidian toc<cr>" },
 			{ "<leader>og", ":Obsidian tags<cr>" },
 			{ "<leader>oo", ":Obsidian open<cr>" },
 			{ "<leader>oz", ":Obsidian search<cr>" },
 			{ "<leader>or", ":Obsidian rename<cr>" }, -- works updating
+			{ "<leader>ot", ":Obsidian template<cr>" },
 			{ "<leader>ow", ":Obsidian workspace<cr>" },
 			{ "<leader>op", ":Obsidian paste_img<cr>" },
 			{ "<leader>ob", ":Obsidian backlinks<cr>" },
+			{ "<leader>ou", ":Obsidian unique_note<cr>" },
 			{ "<leader>of", ":Obsidian follow_link<cr>" },
 			{ "<leader>os", ":Obsidian quick_switch<cr>" },
+			{ "<leader>oa", ":Obsidian new_from_template<cr>" },
+			-- visual (not block or inline)
+			{ "<leader>ox", ":Obsidian extract_note<cr>", mode = "v" },
+			{ "<leader>oL", ":Obsidian link_new<cr>", mode = "v" }, -- inline
+			{ "<leader>ol", ":Obsidian link<cr>", mode = "v" }, -- inline
 		},
 		opts = require("configs.obsidian"),
 	},
 
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		-- script enables it
-		-- event = {
-		-- 	"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-		-- 	"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-		-- },
+		-- event = script enables it
 		keys = {
-			vim.keymap.set("n", "<leader>mt", function()
+			map("n", "<leader>mt", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })
 				require("render-markdown").buf_toggle()
 			end, { desc = "Toggle Buffer Render Markdown" }),
-			vim.keymap.set("n", "<leader>mT", function()
+			map("n", "<leader>mT", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })
 				require("render-markdown").toggle()
 			end, { desc = "Toggle Render Markdown" }),
-			vim.keymap.set("n", "<leader>mv", function()
+			map("n", "<leader>mv", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })
 				require("render-markdown").preview()
 			end, { desc = "Preview Render Markdown" }),
