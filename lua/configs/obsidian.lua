@@ -1,10 +1,11 @@
 -- lua/configs/obsidian.lua
+local vault = "~/Documents/Obsidian/Home"
 return {
 	legacy_commands = false,
 	workspaces = {
 		{
-			name = "Home",
-			path = "~/Documents/Obsidian/Home",
+			name = vim.fn.fnamemodify(vault, ":t"),
+			path = vault,
 		},
 	},
 	footer = {
@@ -32,8 +33,6 @@ return {
 	ui = {
 		enable = false,
 	},
-	-- Inserting tag/outlink is nice,
-	-- TODO: Would be nice to insert outlink paragraph as well
 	picker = {
 		name = nil,
 		note_mappings = {
@@ -56,22 +55,45 @@ return {
 	},
 	templates = {
 		folder = "Templates",
-		date_format = "YYYY-MM-DD",
-		time_format = "HH:mm",
-		-- substitutions = { for custom values },
+		substitutions = {
+			date = function()
+				return os.date("%Y-%m-%d-%A")
+			end,
+			time = function()
+				local h = tonumber(os.date("%H"))
+				local m = os.date("%M")
+				local ampm = h >= 12 and "pm" or "am"
+				h = h % 12
+				if h == 0 then
+					h = 12
+				end
+				return string.format("%d:%s%s", h, m, ampm)
+			end,
+		},
+		customizations = (function()
+			local result = {}
+			local files = vim.fn.glob(vault .. "/Templates/*.md", false, true)
+			for _, file in ipairs(files) do
+				local name = vim.fn.fnamemodify(file, ":t:r")
+				name = name:sub(1, 1):upper() .. name:sub(2)
+				local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
+				result[key] = { notes_subdir = name }
+			end
+			return result
+		end)(),
 	},
 	-- TODO:
 	-- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Autocmds
 	-- Do Autocmds to constantly match scroll with of GUI
 	-- or see callbacks = {},
 	callbacks = {
-		enter_note = function(note)
+		enter_note = function()
 			vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
 				buffer = true,
-				desc = "Toggle checkbox",
 			})
 		end,
 	},
+	-- TODO:
 	daily_notes = {
 		enabled = false,
 		folder = nil,
