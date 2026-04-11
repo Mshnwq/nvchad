@@ -1,6 +1,8 @@
+-- lua/configs/lspconfig.lua
 require("nvchad.configs.lspconfig").defaults()
 local nvlsp = require("nvchad.configs.lspconfig")
 local map = vim.keymap.set
+local nomap = vim.keymap.del
 
 local custom_on_attach = function(_, bufnr)
 	local function opts(desc)
@@ -8,16 +10,22 @@ local custom_on_attach = function(_, bufnr)
 	end
 	map("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
 	map("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
+	nomap("n", "gri")
 	map("n", "gi", vim.lsp.buf.implementation, opts("Go to implementation"))
+	nomap("n", "grt")
 	map("n", "gt", vim.lsp.buf.type_definition, opts("Go to type definition"))
+	nomap("n", "grr")
 	map("n", "gr", vim.lsp.buf.references, opts("Show references"))
+	nomap("n", "grn")
+	map("n", "gn", vim.lsp.buf.rename, opts("Rename"))
 	map("n", "gh", vim.lsp.buf.hover, opts("Show hover"))
+	nomap("n", "gra")
 	map("n", "<leader>da", function()
 		require("tiny-code-action").code_action()
 	end, opts("Code action"))
-	-- Keep track of the last signature window ID
-	local sig_win_id = nil
+
 	-- Override handler with custom options
+	local sig_win_id = nil
 	vim.lsp.config("*", {
 		handlers = {
 			["textDocument/signatureHelp"] = function(err, result, ctx, config)
@@ -67,7 +75,7 @@ vim.lsp.config("*", {
 -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
 local enabled_servers = {
 	"bashls",
-	"nil_ls", -- nil_ls (rust) or nixd (c++)
+	"nil_ls",
 	"pyright",
 	-- "gopls",
 	-- WebDev
@@ -81,6 +89,7 @@ local enabled_servers = {
 	"gitlab_ci_ls",
 	"docker_compose_language_service",
 	"dockerls",
+	-- "lua_ls",
 }
 vim.lsp.enable(enabled_servers)
 
@@ -136,3 +145,65 @@ vim.lsp.config("yamlls", {
 vim.lsp.config("helm_ls", {
 	filetypes = { "helm", "yaml.helm-values", "mustache" },
 })
+
+-- https://oxide.md/README#Neovim
+vim.lsp.config("markdown_oxide", {
+	filetypes = { "markdown" },
+	cmd = { "markdown-oxide" },
+	capabilities = vim.tbl_deep_extend("force", nvlsp.capabilities, {
+		workspace = {
+			didChangeWatchedFiles = {
+				dynamicRegistration = true,
+			},
+		},
+		textDocument = {
+			codeLens = {
+				dynamicRegistration = true,
+			},
+		},
+	}),
+	on_attach = custom_on_attach,
+})
+vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "CursorHold", "BufEnter" }, {
+	callback = function(args)
+		for _, c in ipairs(vim.lsp.get_clients({ bufnr = args.buf })) do
+			if c.name == "markdown_oxide" then
+				vim.lsp.codelens.enable(true, { bufnr = args.buf })
+				break
+			end
+		end
+	end,
+})
+vim.lsp.enable("markdown_oxide")
+
+-- NOTE: for this to work 
+-- must patch neovim/runtime/lua/vim/lsp/codelens.lua
+-- with M._Provider = Provider to publicize it
+local Provider = vim.lsp.codelens._Provider
+Provider.on_win = function(self, toprow, botrow)
+	local bufnr = self.bufnr
+	for row = toprow, botrow do
+		if self.row_version[row] == self.version then
+			goto continue -- skip if already up to date
+		end
+		for client_id, state in pairs(self.client_state) do
+			vim.api.nvim_buf_clear_namespace(bufnr, state.namespace, row, row + 1)
+			local titles = {}
+			for _, lens in ipairs(state.row_lenses[row] or {}) do
+				if lens.command then
+					titles[#titles + 1] = lens.command.title
+				else
+					self:resolve(vim.lsp.get_client_by_id(client_id), lens)
+				end
+			end
+			if #titles > 0 then
+				vim.api.nvim_buf_set_extmark(bufnr, state.namespace, row, 0, {
+					virt_text = { { "  " .. table.concat(titles, " | "), "LspCodeLens" } },
+					virt_text_pos = "eol",
+				})
+			end
+			self.row_version[row] = self.version
+		end
+		::continue::
+	end
+end
