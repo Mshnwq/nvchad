@@ -1,5 +1,4 @@
 local map = vim.keymap.set
-
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -32,13 +31,9 @@ return {
 		dependencies = {
 			"kevinhwang91/promise-async",
 		},
-		keys = {
-			map("n", "zR", require("ufo").openAllFolds),
-			map("n", "zM", require("ufo").closeAllFolds),
-		},
 		config = function()
 			require("ufo").setup({
-				provider_selector = function(bufnr, filetype, buftype)
+				provider_selector = function()
 					return { "treesitter", "indent" }
 				end,
 			})
@@ -114,7 +109,7 @@ return {
 	{
 		"rcarriga/nvim-notify",
 		keys = {
-			map("n", "<leader>nn", require("notify").dismiss()),
+			map("n", "<leader>nn", "<Cmd>lua require('notify').dismiss()<CR>"),
 		},
 		config = function()
 			require("notify").setup({
@@ -263,29 +258,9 @@ return {
 			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
 			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
 		},
-		keys = {
-			{ "<leader>on", ":Obsidian new<cr>" },
-			{ "<leader>om", ":Obsidian toc<cr>" },
-			{ "<leader>og", ":Obsidian tags<cr>" },
-			{ "<leader>oo", ":Obsidian open<cr>" },
-			{ "<leader>oz", ":Obsidian search<cr>" },
-			{ "<leader>or", ":Obsidian rename<cr>" }, -- works updating
-			{ "<leader>ot", ":Obsidian template<cr>" },
-			{ "<leader>ow", ":Obsidian workspace<cr>" },
-			{ "<leader>op", ":Obsidian paste_img<cr>" },
-			{ "<leader>ob", ":Obsidian backlinks<cr>" },
-			{ "<leader>ou", ":Obsidian unique_note<cr>" },
-			{ "<leader>of", ":Obsidian follow_link<cr>" },
-			{ "<leader>os", ":Obsidian quick_switch<cr>" },
-			{ "<leader>oa", ":Obsidian new_from_template<cr>" },
-			-- visual (not block or inline)
-			{ "<leader>ox", ":Obsidian extract_note<cr>", mode = "v" },
-			{ "<leader>oL", ":Obsidian link_new<cr>", mode = "v" }, -- inline
-			{ "<leader>ol", ":Obsidian link<cr>", mode = "v" }, -- inline
-		},
-		opts = require("configs.obsidian"),
+		keys = require("configs.obsidian").keys,
+		opts = require("configs.obsidian").opts,
 	},
-
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		-- event = script enables it
@@ -323,4 +298,27 @@ return {
 			},
 		},
 	},
+	-- {
+	-- 	"nvim-mini/mini.ai",
+	-- 	version = "*", --stable
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("mini.ai").setup()
+	-- 	end,
+	-- },
+	-- {
+	-- 	"nvim-mini/mini.surround",
+	-- 	version = "*", --stable
+	-- 	event = "VeryLazy",
+	-- 	opts = {
+	-- 		silent = true,
+	-- 		mappings = {
+	-- 			replace = "ss",
+	-- 		},
+	-- 	},
+	-- 	config = function(_, opts)
+	-- 		require("mini.surround").setup(opts)
+	-- 		vim.keymap.set("n", "s", "<Nop>")
+	-- 	end,
+	-- },
 }
