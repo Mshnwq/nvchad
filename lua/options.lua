@@ -1,4 +1,4 @@
-require "nvchad.options"
+require("nvchad.options")
 
 -- o.cursorlineopt ='both' -- to enable cursorline!
 local o = vim.o
@@ -13,9 +13,14 @@ o.relativenumber = true
 o.swapfile = false
 o.backup = false
 
--- o.colorcolumn = "100"
-
-o.foldcolumn = '0'
+o.foldcolumn = "0"
 o.foldlevel = 99
 o.foldlevelstart = 99
 o.foldenable = true
+
+-- o.colorcolumn = "88"
+-- o.end_line = 10
+-- o.id = 1
+-- o.virt_text = { { "demo", "IncSearch" } }
+-- o.virt_text_pos = "overlay"
+-- o.virt_text_win_col = 20

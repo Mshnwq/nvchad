@@ -46,7 +46,7 @@ return {
 		language_left = "█",
 		language_right = "█",
 		width = "block",
-		left_pad = 1,
+		left_pad = 0,
 		right_pad = 1,
 		inline_pad = 1,
 		disable_background = true,

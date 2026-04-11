@@ -33,6 +33,7 @@ local options = {
     "awk",
     "ron",
     "svelte",
+    "nix",
   },
 
   highlight = {

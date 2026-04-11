@@ -43,6 +43,7 @@ M = {
     TodoHint = { fg = "green" },
     TodoTest = { fg = "cyan" },
     TodoDefault = { fg = "grey_fg" },
+		LspCodeLens = { fg = "grey_fg2" },
   },
   -- end replace from rice
 }
