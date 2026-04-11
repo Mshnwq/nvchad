@@ -298,27 +298,27 @@ return {
 			},
 		},
 	},
-	-- {
-	-- 	"nvim-mini/mini.ai",
-	-- 	version = "*", --stable
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		require("mini.ai").setup()
-	-- 	end,
-	-- },
-	-- {
-	-- 	"nvim-mini/mini.surround",
-	-- 	version = "*", --stable
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		silent = true,
-	-- 		mappings = {
-	-- 			replace = "ss",
-	-- 		},
-	-- 	},
-	-- 	config = function(_, opts)
-	-- 		require("mini.surround").setup(opts)
-	-- 		vim.keymap.set("n", "s", "<Nop>")
-	-- 	end,
-	-- },
+	{
+		"nvim-mini/mini.ai",
+		version = "*", --stable
+		event = "VeryLazy",
+		config = function()
+			require("mini.ai").setup()
+		end,
+	},
+	{
+		"nvim-mini/mini.surround",
+		version = "*", --stable
+		event = "VeryLazy",
+		opts = {
+			silent = true,
+			mappings = {
+				replace = "ss",
+			},
+		},
+		config = function(_, opts)
+			require("mini.surround").setup(opts)
+			vim.keymap.set("n", "s", "<Nop>")
+		end,
+	},
 }
