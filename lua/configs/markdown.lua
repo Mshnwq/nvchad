@@ -1,6 +1,6 @@
 return {
 	anti_conceal = {
-		enabled = false,
+		enabled = true,
 	},
 	checkbox = {
 		position = "inline",

@@ -25,7 +25,7 @@ return {
 			-- gowork = { "gofumpt", "goimports-reviser" },
 			-- gotmpl = { "gofumpt", "goimports-reviser" },
 			-- web --
- 			nginx = { "nginxfmt" },
+			nginx = { "nginxfmt" },
 			javascript = { "prettierd" },
 			typescript = { "prettierd" },
 			svelte = { "prettierd" },
@@ -38,6 +38,8 @@ return {
 			["yaml.gitlab"] = { "prettierd" },
 			["yaml.docker-compose"] = { "dclint" },
 			dockerfile = { "dockerfmt" },
+			-- markdown = { "rumdl", "doctoc" },
+			markdown = { "rumdl" },
 		},
 		formatters = {
 			nixfmt = {
