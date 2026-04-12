@@ -10,16 +10,16 @@ local custom_on_attach = function(_, bufnr)
 	end
 	map("n", "gD", vim.lsp.buf.declaration, opts("Go to declaration"))
 	map("n", "gd", vim.lsp.buf.definition, opts("Go to definition"))
-	nomap("n", "gri")
+	pcall(nomap, "n", "gri")
 	map("n", "gi", vim.lsp.buf.implementation, opts("Go to implementation"))
-	nomap("n", "grt")
+	pcall(nomap, "n", "grt")
 	map("n", "gt", vim.lsp.buf.type_definition, opts("Go to type definition"))
-	nomap("n", "grr")
+	pcall(nomap, "n", "grr")
 	map("n", "gr", vim.lsp.buf.references, opts("Show references"))
-	nomap("n", "grn")
+	pcall(nomap, "n", "grn")
 	map("n", "gn", vim.lsp.buf.rename, opts("Rename"))
 	map("n", "gh", vim.lsp.buf.hover, opts("Show hover"))
-	nomap("n", "gra")
+	pcall(nomap, "n", "gra")
 	map("n", "<leader>da", function()
 		require("tiny-code-action").code_action()
 	end, opts("Code action"))
@@ -162,7 +162,18 @@ vim.lsp.config("markdown_oxide", {
 			},
 		},
 	}),
-	on_attach = custom_on_attach,
+	on_attach = function(client, bufnr)
+		custom_on_attach(client, bufnr)
+		for _, cmd in ipairs({ "today", "tomorrow", "yesterday" }) do
+			vim.api.nvim_buf_create_user_command(bufnr, cmd:gsub("^%l", string.upper), function()
+				client:exec_cmd({
+					title = ("Markdown-Oxide-%s"):format(cmd),
+					command = "jump",
+					arguments = { cmd },
+				}, { bufnr = bufnr })
+			end, { desc = ("Open %s daily note"):format(cmd) })
+		end
+	end,
 })
 vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "CursorHold", "BufEnter" }, {
 	callback = function(args)
@@ -176,7 +187,7 @@ vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "CursorHold", "BufEn
 })
 vim.lsp.enable("markdown_oxide")
 
--- NOTE: for this to work 
+-- NOTE: for this to work
 -- must patch neovim/runtime/lua/vim/lsp/codelens.lua
 -- with M._Provider = Provider to publicize it
 local Provider = vim.lsp.codelens._Provider
