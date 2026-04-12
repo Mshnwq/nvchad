@@ -2,7 +2,8 @@ local map = vim.keymap.set
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		event = { "BufReadPre", "BufNewFile" },
+		lazy = false,
+		build = ":TSUpdate",
 		config = function()
 			require("configs.treesitter")
 		end,

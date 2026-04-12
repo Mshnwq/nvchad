@@ -51,7 +51,14 @@ local options = {
 	},
 
 	sources = {
-		{ name = "nvim_lsp" },
+		{
+			name = "nvim_lsp",
+			option = {
+				markdown_oxide = {
+					keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
+				},
+			},
+		},
 		{ name = "luasnip", keyword_length = 2 },
 		{ name = "buffer" },
 		{ name = "nvim_lua" },
