@@ -2,7 +2,7 @@
 local vault = "~/Documents/Obsidian/Home"
 local M = {
 	keys = {
-		{ "<leader>on", ":Obsidian new<cr>" },
+		{ "<leader>on", ":Obsidian new " }, -- args: title
 		{ "<leader>om", ":Obsidian toc<cr>" },
 		{ "<leader>og", ":Obsidian tags<cr>" },
 		{ "<leader>oo", ":Obsidian open<cr>" },
@@ -20,6 +20,9 @@ local M = {
 		{ "<leader>ox", ":Obsidian extract_note<cr>", mode = "v" },
 		{ "<leader>oL", ":Obsidian link_new<cr>", mode = "v" }, -- inline
 		{ "<leader>ol", ":Obsidian link<cr>", mode = "v" }, -- inline
+		-- workflow
+		{ "<leader>od", ":Obsidian dailies<cr>" }, -- list out
+		{ "<leader>oy", ":Obsidian today " }, -- args: offset, default is 0
 	},
 	opts = {
 		legacy_commands = false,
@@ -49,7 +52,8 @@ local M = {
 			order = { " ", "x" },
 		},
 		frontmatter = {
-			enabled = false, -- ERRORs IDK
+			enabled = true,
+			sort = false,
 		},
 		ui = {
 			enable = false,
@@ -76,7 +80,11 @@ local M = {
 		},
 		templates = {
 			folder = "Templates",
-			-- substitutions = { custom values },
+			substitutions = {
+				dummy = function()
+					return "dummy"
+				end,
+			},
 			customizations = (function()
 				local result = {}
 				local files = vim.fn.glob(vault .. "/Templates/*.md", false, true)
@@ -84,7 +92,7 @@ local M = {
 					local name = vim.fn.fnamemodify(file, ":t:r")
 					name = name:sub(1, 1):upper() .. name:sub(2)
 					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
-					result[key] = { notes_subdir = name }
+					result[key] = { notes_subdir = "Notes" }
 				end
 				return result
 			end)(),
@@ -95,25 +103,25 @@ local M = {
 		-- or see callbacks = {},
 		callbacks = {
 			enter_note = function()
+				-- TODO: add the [o centering here too
+				vim.keymap.del("n", "<CR>", { buffer = true })
 				vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
 					buffer = true,
 				})
 			end,
 		},
-		-- TODO:
+		-- matches daily notes core plugin behavior
 		daily_notes = {
-			enabled = false,
-			folder = nil,
-			date_format = "YYYY-MM-DD",
+			enabled = true,
+			folder = "Notes",
+			template = "daily",
+			date_format = "YYYY-MM-DD-dddd",
 			alias_format = nil,
-			default_tags = { "daily-notes" },
-			workdays_only = true,
+			default_tags = { "daily" },
+			workdays_only = false,
 		},
 		unique_note = {
 			enabled = false,
-			format = "YYYYMMDDHHmm",
-			folder = nil,
-			template = nil,
 		},
 	},
 }

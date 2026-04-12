@@ -236,6 +236,7 @@ map({ "n", "v" }, "<C-d>", "<C-d>zz")
 map({ "n", "v" }, "<C-u>", "<C-u>zz")
 map({ "n", "v" }, "}", "}zz")
 map({ "n", "v" }, "{", "{zz")
+map({ "n", "v" }, "''", "''zz")
 
 -- repeatable norm command
 -- https://github.com/neovim/neovim/issues/26503
@@ -245,8 +246,8 @@ local function rmap(mode, lhs, cmd)
 		vim.api.nvim_feedkeys(cmd .. cr, "t", false)
 	end)
 end
-
 map("n", "<C-.>", "@:", { noremap = true })
+
 --        bash'isms
 --    word    ->   "word"
 --   "word"   ->    word
