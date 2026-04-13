@@ -53,7 +53,7 @@ local M = {
 		},
 		frontmatter = {
 			enabled = true,
-			sort = false,
+			sort = { "date", "time", "id", "aliases", "tags", "topics" },
 		},
 		ui = {
 			enable = false,
