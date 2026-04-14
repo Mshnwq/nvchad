@@ -3,6 +3,8 @@ require("nvchad.options")
 -- o.cursorlineopt ='both' -- to enable cursorline!
 local o = vim.o
 
+o.spell = false -- using harper-ls
+o.spellfile = vim.fn.expand("~/Documents/spell/en.utf-8.add")
 o.relativenumber = true
 
 -- Indenting

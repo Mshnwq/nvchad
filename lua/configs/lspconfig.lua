@@ -89,7 +89,6 @@ local enabled_servers = {
 	"gitlab_ci_ls",
 	"docker_compose_language_service",
 	"dockerls",
-	-- "lua_ls",
 }
 vim.lsp.enable(enabled_servers)
 
@@ -218,3 +217,41 @@ Provider.on_win = function(self, toprow, botrow)
 		::continue::
 	end
 end
+
+vim.lsp.config("harper_ls", {
+	filetypes = { "markdown" },
+	root_markers = { ".obsidian" },
+	settings = {
+		["harper-ls"] = {
+			userDictPath = "~/Documents/spell/en.utf-8.add",
+			-- https://writewithharper.com/docs/rules
+			linters = {
+				-- https://github.com/Automattic/harper/issues/1573#issuecomment-3777776431
+				ToDoHyphen = false,
+			},
+			codeActions = {
+				ForceStable = false,
+			},
+			markdown = {
+				-- [ignores this part]()
+				IgnoreLinkTitle = true,
+			},
+			isolateEnglish = true,
+		},
+	},
+})
+vim.lsp.enable("harper_ls")
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.keymap.set("n", "zG", function()
+			vim.lsp.buf.code_action({
+				filter = function(action)
+					return action.title:lower():find("to the user dictionary") ~= nil
+				end,
+				apply = true,
+			})
+		end, { buffer = true, desc = "Harper: add word to user dictionary" })
+	end,
+})
