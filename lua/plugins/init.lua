@@ -130,7 +130,6 @@ return {
 			return require("configs.noice")
 		end,
 	},
-	-- https://github.com/b0o/nvim-tree-preview.lua
 
 	-- git helpers
 	{

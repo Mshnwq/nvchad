@@ -35,7 +35,7 @@ local M = {
 		footer = {
 			enabled = true,
 			hl_group = "LspCodeLens",
-			format = "{{backlinks}} <- | {{words}} words {{chars}} chars | -> {{outlinks}}",
+			format = "{{backlinks}} <- | links | -> {{outlinks}}",
 		},
 		open = {
 			use_advanced_uri = true,
@@ -100,11 +100,19 @@ local M = {
 		-- TODO:
 		-- https://github.com/obsidian-nvim/obsidian.nvim/wiki/Autocmds
 		-- Do Autocmds to constantly match scroll with of GUI
-		-- or see callbacks = {},
 		callbacks = {
 			enter_note = function()
-				-- TODO: add the [o centering here too
 				vim.keymap.del("n", "<CR>", { buffer = true })
+				vim.keymap.del("n", "]o", { buffer = true })
+				vim.keymap.del("n", "[o", { buffer = true })
+				vim.keymap.set("n", "]o", function()
+					require("obsidian.api").nav_link("next")
+					vim.cmd("normal! zz")
+				end, { buffer = true, desc = "Obsidian Next Link" })
+				vim.keymap.set("n", "[o", function()
+					require("obsidian.api").nav_link("prev")
+					vim.cmd("normal! zz")
+				end, { buffer = true, desc = "Obsidian Prev Link" })
 				vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
 					buffer = true,
 				})
