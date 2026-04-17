@@ -50,6 +50,7 @@ return {
 		right_pad = 1,
 		inline_pad = 1,
 		disable_background = true,
+		highlight_language = "HeadlineFg",
 	},
 	link = {
 		wiki = {
@@ -74,18 +75,5 @@ return {
 	},
 	paragraph = {
 		enabled = false,
-	},
-	quote = {
-		-- TODO: make it look like markview
-		enabled = true,
-		-- Whether to repeat icon on wrapped lines. Requires neovim >= 0.10. This will obscure text
-		-- if incorrectly configured with :h 'showbreak', :h 'breakindent' and :h 'breakindentopt'.
-		-- A combination of these that is likely to work follows.
-		-- | showbreak      | '  ' (2 spaces)   |
-		-- | breakindent    | true              |
-		-- | breakindentopt | '' (empty string) |
-		-- These are not validated by this plugin. If you want to avoid adding these to your main
-		-- configuration then set them in win_options for this plugin.
-		repeat_linebreak = false,
 	},
 }
