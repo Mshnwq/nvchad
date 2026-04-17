@@ -2,7 +2,7 @@ return {
 	"Isrothy/neominimap.nvim",
 	version = "v3.*.*",
 	enabled = true,
-	lazy = false, -- NOTE: NO NEED to Lazy load
+	lazy = false, -- NO NEED to Lazy load
 	keys = {
 		{ "<leader>mm", "<cmd>Neominimap Toggle<cr>", desc = "Toggle global minimap" },
 	},

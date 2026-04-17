@@ -253,5 +253,13 @@ vim.api.nvim_create_autocmd("FileType", {
 				apply = true,
 			})
 		end, { buffer = true, desc = "Harper: add word to user dictionary" })
+		vim.keymap.set("n", "zw", function()
+			vim.lsp.buf.code_action({
+				filter = function(action)
+					return action.title:lower():find("ignore") ~= nil
+				end,
+				apply = true,
+			})
+		end, { buffer = true, desc = "Harper: Ignore" })
 	end,
 })

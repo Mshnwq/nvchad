@@ -210,22 +210,6 @@ return {
 	--   }
 	-- },
 
-	-- -- Not really
-	-- {
-	--   "OXY2DEV/markview.nvim",
-	--   lazy = false,
-	--   config = function()
-	--     require("markview").setup({
-	--       preview = {
-	--         enable = false,
-	--       },
-	--       markdown = {
-	--         headings = require("markview.presets").headings.glow
-	--       }
-	--     });
-	--     require("markview.extras.checkboxes").setup();
-	--   end,
-	-- },
 	{
 		"lervag/vimtex",
 		lazy = false,
@@ -264,6 +248,22 @@ return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		-- event = script enables it
+		-- apply quote callout patch
+		build = function()
+			local file = vim.fn.stdpath("data")
+				.. "/lazy/render-markdown.nvim/lua/render-markdown/render/markdown/quote.lua"
+			local content = table.concat(vim.fn.readfile(file), "\n")
+			content = content:gsub(
+				"virt_text = { { title or config.rendered, config.highlight } }",
+				"virt_text = { { title or config%.rendered %.%. %" .. "' '" .. ', "RenderMarkdownQuoteTitle" } }'
+			)
+			content = content:gsub("return icon .. ' ' .. title", "return icon %.%. ' ' %.%. title %.%. ' '")
+			content = content:gsub(
+				"virt_text = { { self.data.icon, self.data.highlight } }",
+				'virt_text = { { self%.data%.icon, "RenderMarkdownQuoteIcon" } }'
+			)
+			vim.fn.writefile(vim.split(content, "\n"), file)
+		end,
 		keys = {
 			map("n", "<leader>mt", function()
 				require("lazy").load({ plugins = { "render-markdown.nvim" } })

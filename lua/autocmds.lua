@@ -170,7 +170,7 @@ vim.api.nvim_create_user_command("GB", function()
 		return
 	end
 	if url then
-    url = url:gsub("%)$", "")
+		url = url:gsub("%)$", "")
 	end
 	vim.fn.system("wl-copy " .. vim.fn.shellescape(url))
 	vim.fn.jobstart("$BROWSER $(wl-paste)", { detach = true })
