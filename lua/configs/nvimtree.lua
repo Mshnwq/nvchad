@@ -45,7 +45,7 @@ return {
         ignore_list = {}
       },
       filters = {
-        custom = { "^.git$" }
+        custom  = { "^.git$", "^.obsidian$", "^.trash$", "^_templates$", "^_attachments$" },
       },
       git = {
         enable = true,
