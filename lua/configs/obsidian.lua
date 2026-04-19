@@ -1,6 +1,9 @@
 -- lua/configs/obsidian.lua
 local vault = "~/Documents/Obsidian/Home"
-local inbox = "0_Inbox"
+local inbox_dir = "0_Inbox"
+local notes_dir = "1_Notes"
+local topics_dir = "2_Topics"
+local indexes_dir = "3_Indexes"
 local M = {
 	keys = {
 		{ "<leader>on", ":Obsidian new " }, -- args: title
@@ -112,8 +115,13 @@ local M = {
 		unique_note = {
 			enabled = false,
 		},
-		note_id_func = function(title)
+		note_id_func = function(title, path)
 			if title ~= nil then
+				-- if title == "_index" then
+				-- 	if path ~= nil then
+				-- 		return tostring(path)
+				-- 	end
+				-- end
 				return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
 			end
 			return nil
@@ -121,22 +129,43 @@ local M = {
 		note = {
 			template = "default.md",
 		},
-		-- TODO: eventually move to luasnip
 		templates = {
 			folder = "_templates",
 			substitutions = {
 				dummy = function()
-					return "dummy"
+					return "IDdummy"
+				end,
+				path = function(ctx)
+					return ctx.partial_note and tostring(ctx.partial_note.path)
 				end,
 			},
 			customizations = (function()
 				local result = {}
-				local files = vim.fn.glob(vault .. "/.templates/*.md", false, true)
+				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
 				for _, file in ipairs(files) do
 					local name = vim.fn.fnamemodify(file, ":t:r")
 					name = name:sub(1, 1):upper() .. name:sub(2)
 					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
-					result[key] = { notes_subdir = inbox }
+					if name == "Index" then
+					  result[key] = {
+					    notes_subdir = indexes_dir
+					  }
+					  goto continue
+					end
+					if name == "Topic" then
+					  result[key] = {
+					    notes_subdir = topics_dir
+					  }
+					  goto continue
+					end
+					if name == "Default" then
+					  result[key] = {
+					    notes_subdir = notes_dir
+					  }
+					  goto continue
+					end
+					result[key] = { notes_subdir = notes_dir .. "/" .. name}
+					::continue::
 				end
 				return result
 			end)(),
@@ -144,7 +173,7 @@ local M = {
 		-- matches daily notes core plugin behavior
 		daily_notes = {
 			enabled = true,
-			folder = inbox,
+			folder = inbox_dir,
 			template = "daily",
 			date_format = "YYYY-MM-DD-dddd",
 			alias_format = nil,
