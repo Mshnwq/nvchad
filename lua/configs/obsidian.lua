@@ -95,8 +95,7 @@ local M = {
 			order = { " ", "x" },
 		},
 		frontmatter = {
-			enabled = true,
-			sort = { "date", "time", "id", "aliases", "tags", "topics" },
+			enabled = false,
 		},
 		ui = {
 			enable = false,
@@ -135,9 +134,9 @@ local M = {
 				dummy = function()
 					return "IDdummy"
 				end,
-				path = function(ctx)
-					return ctx.partial_note and tostring(ctx.partial_note.path)
-				end,
+				-- path = function(ctx)
+				-- 	return ctx.partial_note and tostring(ctx.partial_note.path)
+				-- end,
 			},
 			customizations = (function()
 				local result = {}
@@ -147,24 +146,29 @@ local M = {
 					name = name:sub(1, 1):upper() .. name:sub(2)
 					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
 					if name == "Index" then
-					  result[key] = {
-					    notes_subdir = indexes_dir
-					  }
-					  goto continue
+						result[key] = {
+							notes_subdir = indexes_dir,
+						}
+						goto continue
 					end
 					if name == "Topic" then
-					  result[key] = {
-					    notes_subdir = topics_dir
-					  }
-					  goto continue
+						result[key] = {
+							notes_subdir = topics_dir,
+						}
+						goto continue
 					end
-					if name == "Default" then
-					  result[key] = {
-					    notes_subdir = notes_dir
-					  }
-					  goto continue
+					if name == "Quotation" then
+						result[key] = {
+							notes_subdir = notes_dir,
+							note_id_func = function()
+								local ts = tostring(os.time())
+								return "quo-" .. ts
+							end,
+						}
+						goto continue
 					end
-					result[key] = { notes_subdir = notes_dir .. "/" .. name}
+					result[key] = { notes_subdir = notes_dir }
+					-- result[key] = { notes_subdir = notes_dir .. "/" .. name}
 					::continue::
 				end
 				return result
