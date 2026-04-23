@@ -2,6 +2,21 @@ dofile(vim.g.base46_cache .. "cmp")
 
 local cmp = require("cmp")
 
+local sources = {
+	{
+		name = "nvim_lsp",
+		option = {
+			markdown_oxide = {
+				keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
+			},
+		},
+	},
+	{ name = "luasnip", keyword_length = 2 },
+	{ name = "buffer" },
+	{ name = "nvim_lua" },
+	{ name = "path" },
+}
+
 local options = {
 	completion = { completeopt = "menu,menuone" },
 
@@ -50,21 +65,18 @@ local options = {
 		}),
 	},
 
-	sources = {
-		{
-			name = "nvim_lsp",
-			option = {
-				markdown_oxide = {
-					keyword_pattern = [[\(\k\| \|\/\|#\)\+]],
-				},
-			},
-		},
-		{ name = "luasnip", keyword_length = 2 },
-		{ name = "buffer" },
-		{ name = "nvim_lua" },
-		{ name = "path" },
-		-- { name = "copilot" },
-	},
+	sources = sources,
 }
+
+-- patch luasnip keyword_length for markdown
+local md_sources = vim.deepcopy(sources)
+for _, s in ipairs(md_sources) do
+	if s.name == "luasnip" then
+		s.keyword_length = 1
+	end
+end
+cmp.setup.filetype("markdown", {
+	sources = cmp.config.sources(md_sources),
+})
 
 return vim.tbl_deep_extend("force", options, require("nvchad.cmp"))

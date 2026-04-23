@@ -20,7 +20,6 @@ map("n", "<leader><leader>", function()
 	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
 end, { desc = "Last Buffer" })
 
-map("n", "|", "%")
 map("n", "<A-k>", "<Cmd>t-1<CR>")
 map("n", "<A-j>", "<Cmd>t.<CR>")
 map("n", "<A-K>", "<Cmd>normal gcc<CR><Cmd>t-1<CR><Cmd>normal gcc<CR>")
