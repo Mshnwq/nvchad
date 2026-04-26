@@ -234,10 +234,47 @@ return {
 			}
 		end,
 	},
+	{
+		"nvim-tree/nvim-web-devicons",
+		build = function()
+			local function prepend_before_last(filepath, new_line)
+				local lines = {}
+				for line in io.lines(filepath) do
+					table.insert(lines, line)
+				end
+				-- insert before last line
+				table.insert(lines, #lines, new_line)
+				local f = io.open(filepath, "w")
+				f:write(table.concat(lines, "\n"))
+				f:close()
+			end
+			local file1 = vim.fn.stdpath("data")
+				.. "/lazy/nvim-web-devicons/lua/nvim-web-devicons/default/icons_by_file_extension.lua"
+			prepend_before_last(
+				file1,
+				'  ["dataviewjs"]     = { icon = "", color = "#CBCB41", cterm_color = "185", name = "DV"                         },'
+			)
+			prepend_before_last(
+				file1,
+				'  ["base"]     = { icon = "", color = "#CBCB41", cterm_color = "185", name = "Base"                         },'
+			)
+			local file2 = vim.fn.stdpath("data") .. "/lazy/nvim-web-devicons/lua/nvim-web-devicons/filetypes.lua"
+			prepend_before_last(file2, '  ["dataviewjs"] = "dataviewjs",')
+			prepend_before_last(file2, '  ["base"] = "base",')
+		end,
+		opts = {},
+	},
 
 	{
 		"mshnwq/obsidian.nvim", -- switch when merged
 		version = "*", --latest
+		build = function()
+			local file = vim.fn.stdpath("data") .. "/lazy/obsidian.nvim/lua/obsidian/search/ripgrep.lua"
+			local content = table.concat(vim.fn.readfile(file), "\n")
+			content =
+				content:gsub("local additional_opts = {}", 'local additional_opts = { "--glob", "!_templates/**" }')
+			vim.fn.writefile(vim.split(content, "\n"), file)
+		end,
 		event = {
 			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
 			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
@@ -247,7 +284,7 @@ return {
 	},
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		-- event = script enables it
+		-- event = nvim-obsidian-script enables it
 		-- apply quote callout patch
 		build = function()
 			local file = vim.fn.stdpath("data")
