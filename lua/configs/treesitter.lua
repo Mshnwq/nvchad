@@ -48,3 +48,5 @@ require("nvim-treesitter").install(ensure_installed)
 require("nvim-treesitter").setup(options)
 
 vim.treesitter.language.register("gotmpl", "mustache")
+vim.treesitter.language.register("javascript", "dataviewjs")
+vim.treesitter.language.register("yaml", "base")
