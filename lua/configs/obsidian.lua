@@ -203,35 +203,35 @@ local M = {
 					return string.format("%d", n)
 				end,
 			},
-			-- customizations = (function()
-			-- 	local result = {}
-			-- 	local subdir_map = {
-			-- 		["Index"] = indexes_dir,
-			-- 		["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
-			-- 		["Date-bc"] = indexes_dir .. "/Dates/BC",
-			-- 		["Date-year"] = indexes_dir .. "/Dates/Years",
-			-- 		["Date"] = indexes_dir .. "/Dates",
-			-- 		["Topic"] = topics_dir,
-			-- 		["Book"] = notes_dir .. "/Books",
-			-- 		["Company-brand"] = notes_dir .. "/Companies/Brand",
-			-- 		["Company-distributor"] = notes_dir .. "/Companies/DST",
-			-- 		["Contact-distributor"] = notes_dir .. "/Contacts/DST",
-			-- 		["Item"] = notes_dir .. "/Items",
-			-- 		["People-figure"] = notes_dir .. "/People/Figures",
-			-- 		["Quotation"] = notes_dir .. "/Quotas",
-			-- 	}
-			-- 	local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
-			-- 	for _, file in ipairs(files) do
-			-- 		local name = vim.fn.fnamemodify(file, ":t:r")
-			-- 		name = name:sub(1, 1):upper() .. name:sub(2)
-			-- 		local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
-			-- 		local subdir = subdir_map[name] or notes_dir
-			-- 		result[key] = { notes_subdir = subdir }
-			-- 		if name == "Quotation" then
-			-- 			result[key].note_id_func = function()
-			-- 				return "quo-" .. tostring(os.time())
-			-- 			end
-			-- 		end
+			customizations = (function()
+				local result = {}
+				local subdir_map = {
+					["Index"] = indexes_dir,
+					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
+					["Date-bc"] = indexes_dir .. "/Dates/BC",
+					["Date-year"] = indexes_dir .. "/Dates/Years",
+					["Date"] = indexes_dir .. "/Dates",
+					["Topic"] = topics_dir,
+					["Book"] = notes_dir .. "/Books",
+					["Company-brand"] = notes_dir .. "/Companies/Brand",
+					["Company-distributor"] = notes_dir .. "/Companies/DST",
+					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
+					["Item"] = notes_dir .. "/Items",
+					["People-figure"] = notes_dir .. "/People/Figures",
+					["Quotation"] = notes_dir .. "/Quotas",
+				}
+				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
+				for _, file in ipairs(files) do
+					local name = vim.fn.fnamemodify(file, ":t:r")
+					name = name:sub(1, 1):upper() .. name:sub(2)
+					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
+					local subdir = subdir_map[name] or notes_dir
+					result[key] = { notes_subdir = subdir }
+					if name == "Quotation" then
+						result[key].note_id_func = function()
+							return "quo-" .. tostring(os.time())
+						end
+					end
 				end
 				return result
 			end)(),
