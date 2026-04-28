@@ -4,6 +4,20 @@ local inbox_dir = "0_Inbox"
 local notes_dir = "1_Notes"
 local topics_dir = "2_Topics"
 local indexes_dir = "3_Indexes"
+local months = {
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+}
 local M = {
 	keys = {
 		{ "<leader>on", ":Obsidian new " }, -- args: title
@@ -65,8 +79,44 @@ local M = {
 			end,
 		},
 		callbacks = {
-			-- pre_write_note = function()
+			-- post_write_note = function()
 			-- 	vim.cmd("Obsidian open")
+			-- end,
+			-- pre_write_note = function(note)
+			-- 	local bufnr = vim.fn.bufnr(tostring(note.path))
+			-- 	if bufnr == -1 then
+			-- 		return
+			-- 	end
+			-- 	local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
+			-- 	local t = os.date("*t")
+			-- 	local hour = t.hour % 12
+			-- 	if hour == 0 then
+			-- 		hour = 12
+			-- 	end
+			-- 	local ampm = t.hour < 12 and "am" or "pm"
+			-- 	local timestamp = string.format(
+			-- 		"%04d-%02d-%02d-%s %02d:%02d %s",
+			-- 		t.year,
+			-- 		t.month,
+			-- 		t.day,
+			-- 		days[t.wday],
+			-- 		hour,
+			-- 		t.min,
+			-- 		ampm
+			-- 	)
+			-- 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+			-- 	for i, line in ipairs(lines) do
+			-- 		if line:match("^id:") then
+			-- 			lines[i] = string.format('id: "%s"', tostring(note.id))
+			-- 		end
+			-- 		if vim.bo[bufnr].modified and line:match("^updated_on:") then
+			-- 			lines[i] = string.format('updated_on: "%s"', timestamp)
+			-- 		end
+			-- 	end
+			-- 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+			-- 	vim.api.nvim_buf_call(bufnr, function()
+			-- 		vim.cmd("noautocmd write")
+			-- 	end)
 			-- end,
 			enter_note = function()
 				vim.keymap.del("n", "<CR>", { buffer = true })
@@ -95,7 +145,9 @@ local M = {
 			order = { " ", "x" },
 		},
 		frontmatter = {
+			-- use pre write
 			enabled = false,
+			sort = vim.NIL,
 		},
 		ui = {
 			enable = false,
@@ -114,13 +166,8 @@ local M = {
 		unique_note = {
 			enabled = false,
 		},
-		note_id_func = function(title, path)
+		note_id_func = function(title)
 			if title ~= nil then
-				-- if title == "_index" then
-				-- 	if path ~= nil then
-				-- 		return tostring(path)
-				-- 	end
-				-- end
 				return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
 			end
 			return nil
@@ -131,45 +178,60 @@ local M = {
 		templates = {
 			folder = "_templates",
 			substitutions = {
-				dummy = function()
-					return "IDdummy"
+				custom_date_1 = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+					if not y then
+						return ""
+					end
+					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
 				end,
-				-- path = function(ctx)
-				-- 	return ctx.partial_note and tostring(ctx.partial_note.path)
-				-- end,
+				custom_date_2 = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+					if not y then
+						return ""
+					end
+					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
+				end,
+				absolute_date = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local n = tonumber((name:gsub("^-", "")))
+					if not n then
+						return ""
+					end
+					return string.format("%d", n)
+				end,
 			},
-			customizations = (function()
-				local result = {}
-				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
-				for _, file in ipairs(files) do
-					local name = vim.fn.fnamemodify(file, ":t:r")
-					name = name:sub(1, 1):upper() .. name:sub(2)
-					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
-					if name == "Index" then
-						result[key] = {
-							notes_subdir = indexes_dir,
-						}
-						goto continue
-					end
-					if name == "Topic" then
-						result[key] = {
-							notes_subdir = topics_dir,
-						}
-						goto continue
-					end
-					if name == "Quotation" then
-						result[key] = {
-							notes_subdir = notes_dir,
-							note_id_func = function()
-								local ts = tostring(os.time())
-								return "quo-" .. ts
-							end,
-						}
-						goto continue
-					end
-					result[key] = { notes_subdir = notes_dir }
-					-- result[key] = { notes_subdir = notes_dir .. "/" .. name}
-					::continue::
+			-- customizations = (function()
+			-- 	local result = {}
+			-- 	local subdir_map = {
+			-- 		["Index"] = indexes_dir,
+			-- 		["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
+			-- 		["Date-bc"] = indexes_dir .. "/Dates/BC",
+			-- 		["Date-year"] = indexes_dir .. "/Dates/Years",
+			-- 		["Date"] = indexes_dir .. "/Dates",
+			-- 		["Topic"] = topics_dir,
+			-- 		["Book"] = notes_dir .. "/Books",
+			-- 		["Company-brand"] = notes_dir .. "/Companies/Brand",
+			-- 		["Company-distributor"] = notes_dir .. "/Companies/DST",
+			-- 		["Contact-distributor"] = notes_dir .. "/Contacts/DST",
+			-- 		["Item"] = notes_dir .. "/Items",
+			-- 		["People-figure"] = notes_dir .. "/People/Figures",
+			-- 		["Quotation"] = notes_dir .. "/Quotas",
+			-- 	}
+			-- 	local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
+			-- 	for _, file in ipairs(files) do
+			-- 		local name = vim.fn.fnamemodify(file, ":t:r")
+			-- 		name = name:sub(1, 1):upper() .. name:sub(2)
+			-- 		local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
+			-- 		local subdir = subdir_map[name] or notes_dir
+			-- 		result[key] = { notes_subdir = subdir }
+			-- 		if name == "Quotation" then
+			-- 			result[key].note_id_func = function()
+			-- 				return "quo-" .. tostring(os.time())
+			-- 			end
+			-- 		end
 				end
 				return result
 			end)(),
