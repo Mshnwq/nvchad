@@ -82,42 +82,42 @@ local M = {
 			-- post_write_note = function()
 			-- 	vim.cmd("Obsidian open")
 			-- end,
-			-- pre_write_note = function(note)
-			-- 	local bufnr = vim.fn.bufnr(tostring(note.path))
-			-- 	if bufnr == -1 then
-			-- 		return
-			-- 	end
-			-- 	local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-			-- 	local t = os.date("*t")
-			-- 	local hour = t.hour % 12
-			-- 	if hour == 0 then
-			-- 		hour = 12
-			-- 	end
-			-- 	local ampm = t.hour < 12 and "am" or "pm"
-			-- 	local timestamp = string.format(
-			-- 		"%04d-%02d-%02d-%s %02d:%02d %s",
-			-- 		t.year,
-			-- 		t.month,
-			-- 		t.day,
-			-- 		days[t.wday],
-			-- 		hour,
-			-- 		t.min,
-			-- 		ampm
-			-- 	)
-			-- 	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-			-- 	for i, line in ipairs(lines) do
-			-- 		if line:match("^id:") then
-			-- 			lines[i] = string.format('id: "%s"', tostring(note.id))
-			-- 		end
-			-- 		if vim.bo[bufnr].modified and line:match("^updated_on:") then
-			-- 			lines[i] = string.format('updated_on: "%s"', timestamp)
-			-- 		end
-			-- 	end
-			-- 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-			-- 	vim.api.nvim_buf_call(bufnr, function()
-			-- 		vim.cmd("noautocmd write")
-			-- 	end)
-			-- end,
+			pre_write_note = function(note)
+				local bufnr = vim.fn.bufnr(tostring(note.path))
+				if bufnr == -1 then
+					return
+				end
+				local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
+				local t = os.date("*t")
+				local hour = t.hour % 12
+				if hour == 0 then
+					hour = 12
+				end
+				local ampm = t.hour < 12 and "am" or "pm"
+				local timestamp = string.format(
+					"%04d-%02d-%02d-%s %02d:%02d %s",
+					t.year,
+					t.month,
+					t.day,
+					days[t.wday],
+					hour,
+					t.min,
+					ampm
+				)
+				local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+				for i, line in ipairs(lines) do
+					if line:match("^id:") then
+						lines[i] = string.format('id: "%s"', tostring(note.id))
+					end
+					if vim.bo[bufnr].modified and line:match("^updated_on:") then
+						lines[i] = string.format('updated_on: "%s"', timestamp)
+					end
+				end
+				vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+				vim.api.nvim_buf_call(bufnr, function()
+					vim.cmd("noautocmd write")
+				end)
+			end,
 			enter_note = function()
 				vim.keymap.del("n", "<CR>", { buffer = true })
 				vim.keymap.del("n", "]o", { buffer = true })
