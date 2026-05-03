@@ -4,7 +4,7 @@ require("nvchad.options")
 local o = vim.o
 
 o.spell = false -- using harper-ls
-o.spellfile = vim.fn.expand("~/Documents/spell/en.utf-8.add")
+o.spellfile = vim.fn.expand("~/Documents/NeoVim/spell/en.utf-8.add")
 o.relativenumber = true
 
 -- Indenting

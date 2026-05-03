@@ -223,7 +223,7 @@ vim.lsp.config("harper_ls", {
 	root_markers = { ".obsidian" },
 	settings = {
 		["harper-ls"] = {
-			userDictPath = "~/Documents/spell/en.utf-8.add",
+			userDictPath = "~/Documents/NeoVim/spell/en.utf-8.add",
 			-- https://writewithharper.com/docs/rules
 			linters = {
 				-- https://github.com/Automattic/harper/issues/1573#issuecomment-3777776431

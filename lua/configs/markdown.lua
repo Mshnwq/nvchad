@@ -71,7 +71,7 @@ return {
 	bullet = {
 		left_pad = 0,
 		icons = { "", "", "", "" },
-		highlight = "HeadlineFg",
+		highlight = "St_Lint",
 	},
 	paragraph = {
 		enabled = false,
