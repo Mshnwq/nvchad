@@ -1,9 +1,10 @@
 -- lua/configs/obsidian.lua
 local vault = "~/Documents/Obsidian/Home"
-local inbox_dir = "0_Inbox"
+local bin_dir = "~/Documents/NeoVim/bin"
 local notes_dir = "1_Notes"
 local topics_dir = "2_Topics"
 local indexes_dir = "3_Indexes"
+local _pre_write_running = {}
 local months = {
 	"January",
 	"February",
@@ -83,8 +84,14 @@ local M = {
 			-- 	vim.cmd("Obsidian open")
 			-- end,
 			pre_write_note = function(note)
+				local path = tostring(note.path)
+				if _pre_write_running[path] then
+					return
+				end
+				_pre_write_running[path] = true
 				local bufnr = vim.fn.bufnr(tostring(note.path))
 				if bufnr == -1 then
+					_pre_write_running[path] = nil
 					return
 				end
 				local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
@@ -105,6 +112,45 @@ local M = {
 					ampm
 				)
 				local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+				local original_lines = vim.deepcopy(lines)
+				local tracked_tags = {}
+				local in_frontmatter = false
+				for i, line in ipairs(lines) do
+					if i == 1 and line == "---" then
+						in_frontmatter = true
+					elseif in_frontmatter and line == "---" then
+						break
+					elseif in_frontmatter then
+						local tag = line:match("^(%w+)_track:")
+						if tag then
+							tracked_tags[tag] = true
+						end
+					end
+				end
+				local result = {}
+				if next(tracked_tags) then
+					for _, line in ipairs(lines) do
+						local clean = line:gsub("%s+$", "")
+						local h, m, ap, marker, tag = clean:match("^### (%d+):(%d+) ([AaPp][Mm]) (start) #Task/(%w+)")
+						if not h then
+							h, m, ap, marker, tag = clean:match("^### (%d+):(%d+) ([AaPp][Mm]) (end) #Task/(%w+)")
+						end
+						if h and tag and tracked_tags[tag] then
+							if not result[tag] then
+								result[tag] = {}
+							end
+							local hh = tonumber(h)
+							local mm = tonumber(m)
+							if ap:lower() == "pm" and hh ~= 12 then
+								hh = hh + 12
+							end
+							if ap:lower() == "am" and hh == 12 then
+								hh = 0
+							end
+							result[tag][marker] = hh * 60 + mm
+						end
+					end
+				end
 				for i, line in ipairs(lines) do
 					if line:match("^id:") then
 						lines[i] = string.format('id: "%s"', tostring(note.id))
@@ -112,10 +158,34 @@ local M = {
 					if vim.bo[bufnr].modified and line:match("^updated_on:") then
 						lines[i] = string.format('updated_on: "%s"', timestamp)
 					end
+					for tag, times in pairs(result) do
+						local key = tag .. "_track"
+						if line:match("^" .. key .. ":") then
+							if times.start and times["end"] then
+								local diff = times["end"] - times.start
+								if diff < 0 then
+									diff = diff + 24 * 60
+								end
+								local dh = math.floor(diff / 60)
+								local dm = diff % 60
+								lines[i] = string.format('%s: "%02d:%02d"', key, dh, dm)
+							end
+						end
+					end
 				end
-				vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-				vim.api.nvim_buf_call(bufnr, function()
-					vim.cmd("noautocmd write")
+				local changed = false
+				for i = 1, #lines do
+					if lines[i] ~= original_lines[i] then
+						changed = true
+						break
+					end
+				end
+				if changed then
+					vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+					vim.bo[bufnr].modified = false
+				end
+				vim.schedule(function()
+					_pre_write_running[path] = nil
 				end)
 			end,
 			enter_note = function()
@@ -175,77 +245,112 @@ local M = {
 		note = {
 			template = "default.md",
 		},
-		templates = {
-			folder = "_templates",
-			substitutions = {
-				custom_date_1 = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
-					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
-					if not y then
-						return ""
-					end
-					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
-				end,
-				custom_date_2 = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
-					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
-					if not y then
-						return ""
-					end
-					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
-				end,
-				absolute_date = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
-					local n = tonumber((name:gsub("^-", "")))
-					if not n then
-						return ""
-					end
-					return string.format("%d", n)
-				end,
-			},
-			customizations = (function()
-				local result = {}
-				local subdir_map = {
-					["Index"] = indexes_dir,
-					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
-					["Date-bc"] = indexes_dir .. "/Dates/BC",
-					["Date-year"] = indexes_dir .. "/Dates/Years",
-					["Date"] = indexes_dir .. "/Dates",
-					["Topic"] = topics_dir,
-					["Book"] = notes_dir .. "/Books",
-					["Company-brand"] = notes_dir .. "/Companies/Brand",
-					["Company-distributor"] = notes_dir .. "/Companies/DST",
-					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
-					["Item"] = notes_dir .. "/Items",
-					["People-figure"] = notes_dir .. "/People/Figures",
-					["Quotation"] = notes_dir .. "/Quotas",
-				}
-				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
-				for _, file in ipairs(files) do
-					local name = vim.fn.fnamemodify(file, ":t:r")
-					name = name:sub(1, 1):upper() .. name:sub(2)
-					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
-					local subdir = subdir_map[name] or notes_dir
-					result[key] = { notes_subdir = subdir }
-					if name == "Quotation" then
-						result[key].note_id_func = function()
-							return "quo-" .. tostring(os.time())
-						end
-					end
-				end
-				return result
-			end)(),
-		},
-		-- matches daily notes core plugin behavior
-		daily_notes = {
-			enabled = true,
-			folder = inbox_dir,
-			template = "daily",
-			date_format = "YYYY-MM-DD-ddd",
-			alias_format = nil,
-			default_tags = { "daily" },
-			workdays_only = false,
-		},
-	},
-}
-return M
+-- 		templates = {
+-- 			folder = "_templates",
+-- 			substitutions = {
+-- 				calendar = function(ctx, suffix)
+-- 					local date = ctx.partial_note and ctx.partial_note:display_name() or ""
+-- 					local handle = io.popen(bin_dir .. "/calendar " .. date .. " --" .. suffix .. "-latin")
+-- 					if handle ~= nil then
+-- 						local result = handle:read("*l")
+-- 						handle:close()
+-- 						return result
+-- 					end
+-- 				end,
+-- 				gregorian_date_dd_mmmm_yy = function(ctx)
+-- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+-- 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+-- 					if not y then
+-- 						return ""
+-- 					end
+-- 					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
+-- 				end,
+-- 				gregorian_date_mmmm_dd_yy = function(ctx)
+-- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+-- 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+-- 					if not y then
+-- 						return ""
+-- 					end
+-- 					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
+-- 				end,
+-- 				-- solves zero truncation and negative dates issues
+-- 				absolute_date = function(ctx)
+-- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+-- 					local n = tonumber((name:gsub("^-", "")))
+-- 					if not n then
+-- 						return ""
+-- 					end
+-- 					return string.format("%d", n)
+-- 				end,
+-- 			},
+-- 			customizations = (function()
+-- 				local function conflict_check(title, check_dir)
+-- 					if title == nil then
+-- 						return nil
+-- 					end
+-- 					if vim.fn.glob(check_dir .. title .. ".md") ~= "" then
+-- 						vim.notify(
+-- 							"[obsidian] ID conflict: '" .. title .. "' already exists in " .. check_dir,
+-- 							vim.log.levels.ERROR
+-- 						)
+-- 						return nil
+-- 					end
+-- 					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+-- 				end
+-- 				local result = {}
+-- 				local subdir_map = {
+-- 					["Index"] = indexes_dir,
+-- 					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
+-- 					["Date-bc"] = indexes_dir .. "/Dates/BC",
+-- 					["Date-year"] = indexes_dir .. "/Dates/Years",
+-- 					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
+-- 					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
+-- 					["Topic"] = topics_dir,
+-- 					["Book"] = notes_dir .. "/Books",
+-- 					["Company-brand"] = notes_dir .. "/Companies/Brand",
+-- 					["Company-distributor"] = notes_dir .. "/Companies/DST",
+-- 					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
+-- 					["Item"] = notes_dir .. "/Items",
+-- 					["People-figure"] = notes_dir .. "/People/Figures",
+-- 					["Quotation"] = notes_dir .. "/Quotas",
+-- 				}
+-- 				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
+-- 				for _, file in ipairs(files) do
+-- 					local name = vim.fn.fnamemodify(file, ":t:r")
+-- 					name = name:sub(1, 1):upper() .. name:sub(2)
+-- 					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
+-- 					local subdir = subdir_map[name] or notes_dir
+-- 					result[key] = { notes_subdir = subdir }
+-- 					if name == "Quotation" then
+-- 						result[key].note_id_func = function()
+-- 							return "quo-" .. tostring(os.time())
+-- 						end
+-- 					elseif name == "Date" then
+-- 						result[key].note_id_func = function(title)
+-- 							return conflict_check(title, indexes_dir .. "/Calendar/")
+-- 						end
+-- 					elseif name == "Calendar" then
+-- 						result[key].note_id_func = function(title)
+-- 							if title == nil then
+-- 								title = os.date("%Y-%m-%d")
+-- 							end
+-- 							return conflict_check(title, indexes_dir .. "/Dates/")
+-- 						end
+-- 					end
+-- 				end
+-- 				return result
+-- 			end)(),
+-- 		},
+-- 		-- matches daily notes core plugin behavior
+-- 		daily_notes = {
+-- 			enabled = true,
+-- 			folder = notes_dir .. "/Daily",
+-- 			template = "daily",
+-- 			date_format = "YYYY-MM-DD-ddd",
+-- 			alias_format = nil,
+-- 			default_tags = { "daily" },
+-- 			workdays_only = false,
+-- 		},
+-- 	},
+-- }
+-- return M
