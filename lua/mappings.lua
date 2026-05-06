@@ -390,3 +390,5 @@ for level = 1, 4 do
 		vim.cmd("normal! zz")
 	end, { desc = "[P]Fold all headings level " .. level .. " or above" })
 end
+
+map("n", "<leader>db", "<Cmd>CopyCodeBlock<CR>", { desc = "Copy code block contents" })

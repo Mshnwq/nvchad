@@ -221,3 +221,45 @@ vim.api.nvim_create_autocmd("FileType", {
 		wrap("[[")
 	end,
 })
+
+vim.api.nvim_create_user_command("CopyCodeBlock", function()
+	local row = vim.api.nvim_win_get_cursor(0)[1]
+	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+	local block_start, block_end = nil, nil
+	for i = row, 1, -1 do
+		if lines[i]:match("^```") then
+			block_start = i
+			break
+		end
+	end
+	for i = row + 1, #lines do
+		if lines[i]:match("^```") then
+			block_end = i
+			break
+		end
+	end
+	if not block_start or not block_end then
+		vim.notify("Not inside a code block", vim.log.levels.WARN)
+		return
+	end
+	local content = table.concat(lines, "\n", block_start + 1, block_end - 1)
+	vim.fn.setreg("+", content)
+	local ns = vim.api.nvim_create_namespace("CopyCodeBlockHl")
+	local buf = 0
+	local start_row = block_start - 1 -- 0-based
+	local start_col = 0
+	local end_row = block_end - 2 -- last content line, 0-based inclusive
+	local last_line = vim.api.nvim_buf_get_lines(buf, end_row, end_row + 1, false)[1] or ""
+	local actual_end_col = #last_line
+	local id = vim.api.nvim_buf_set_extmark(buf, ns, start_row, start_col, {
+		end_row = end_row,
+		end_col = actual_end_col,
+		hl_group = "Visual",
+		priority = 100,
+		strict = true,
+	})
+	vim.defer_fn(function()
+		vim.api.nvim_buf_del_extmark(buf, ns, id)
+	end, 300)
+	vim.notify("Copied code block (" .. (block_end - block_start - 1) .. " lines)")
+end, { desc = "Copy code block contents" })
