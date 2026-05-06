@@ -245,112 +245,112 @@ local M = {
 		note = {
 			template = "default.md",
 		},
--- 		templates = {
--- 			folder = "_templates",
--- 			substitutions = {
--- 				calendar = function(ctx, suffix)
--- 					local date = ctx.partial_note and ctx.partial_note:display_name() or ""
--- 					local handle = io.popen(bin_dir .. "/calendar " .. date .. " --" .. suffix .. "-latin")
--- 					if handle ~= nil then
--- 						local result = handle:read("*l")
--- 						handle:close()
--- 						return result
--- 					end
--- 				end,
--- 				gregorian_date_dd_mmmm_yy = function(ctx)
--- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
--- 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
--- 					if not y then
--- 						return ""
--- 					end
--- 					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
--- 				end,
--- 				gregorian_date_mmmm_dd_yy = function(ctx)
--- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
--- 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
--- 					if not y then
--- 						return ""
--- 					end
--- 					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
--- 				end,
--- 				-- solves zero truncation and negative dates issues
--- 				absolute_date = function(ctx)
--- 					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
--- 					local n = tonumber((name:gsub("^-", "")))
--- 					if not n then
--- 						return ""
--- 					end
--- 					return string.format("%d", n)
--- 				end,
--- 			},
--- 			customizations = (function()
--- 				local function conflict_check(title, check_dir)
--- 					if title == nil then
--- 						return nil
--- 					end
--- 					if vim.fn.glob(check_dir .. title .. ".md") ~= "" then
--- 						vim.notify(
--- 							"[obsidian] ID conflict: '" .. title .. "' already exists in " .. check_dir,
--- 							vim.log.levels.ERROR
--- 						)
--- 						return nil
--- 					end
--- 					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
--- 				end
--- 				local result = {}
--- 				local subdir_map = {
--- 					["Index"] = indexes_dir,
--- 					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
--- 					["Date-bc"] = indexes_dir .. "/Dates/BC",
--- 					["Date-year"] = indexes_dir .. "/Dates/Years",
--- 					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
--- 					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
--- 					["Topic"] = topics_dir,
--- 					["Book"] = notes_dir .. "/Books",
--- 					["Company-brand"] = notes_dir .. "/Companies/Brand",
--- 					["Company-distributor"] = notes_dir .. "/Companies/DST",
--- 					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
--- 					["Item"] = notes_dir .. "/Items",
--- 					["People-figure"] = notes_dir .. "/People/Figures",
--- 					["Quotation"] = notes_dir .. "/Quotas",
--- 				}
--- 				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
--- 				for _, file in ipairs(files) do
--- 					local name = vim.fn.fnamemodify(file, ":t:r")
--- 					name = name:sub(1, 1):upper() .. name:sub(2)
--- 					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
--- 					local subdir = subdir_map[name] or notes_dir
--- 					result[key] = { notes_subdir = subdir }
--- 					if name == "Quotation" then
--- 						result[key].note_id_func = function()
--- 							return "quo-" .. tostring(os.time())
--- 						end
--- 					elseif name == "Date" then
--- 						result[key].note_id_func = function(title)
--- 							return conflict_check(title, indexes_dir .. "/Calendar/")
--- 						end
--- 					elseif name == "Calendar" then
--- 						result[key].note_id_func = function(title)
--- 							if title == nil then
--- 								title = os.date("%Y-%m-%d")
--- 							end
--- 							return conflict_check(title, indexes_dir .. "/Dates/")
--- 						end
--- 					end
--- 				end
--- 				return result
--- 			end)(),
--- 		},
--- 		-- matches daily notes core plugin behavior
--- 		daily_notes = {
--- 			enabled = true,
--- 			folder = notes_dir .. "/Daily",
--- 			template = "daily",
--- 			date_format = "YYYY-MM-DD-ddd",
--- 			alias_format = nil,
--- 			default_tags = { "daily" },
--- 			workdays_only = false,
--- 		},
--- 	},
--- }
--- return M
+		templates = {
+			folder = "_templates",
+			substitutions = {
+				calendar = function(ctx, suffix)
+					local date = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local handle = io.popen(bin_dir .. "/calendar " .. date .. " --" .. suffix .. "-latin")
+					if handle ~= nil then
+						local result = handle:read("*l")
+						handle:close()
+						return result
+					end
+				end,
+				gregorian_date_dd_mmmm_yy = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+					if not y then
+						return ""
+					end
+					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
+				end,
+				gregorian_date_mmmm_dd_yy = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
+					if not y then
+						return ""
+					end
+					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
+				end,
+				-- solves zero truncation and negative dates issues
+				absolute_date = function(ctx)
+					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local n = tonumber((name:gsub("^-", "")))
+					if not n then
+						return ""
+					end
+					return string.format("%d", n)
+				end,
+			},
+			customizations = (function()
+				local function conflict_check(title, check_dir)
+					if title == nil then
+						return nil
+					end
+					if vim.fn.glob(check_dir .. title .. ".md") ~= "" then
+						vim.notify(
+							"[obsidian] ID conflict: '" .. title .. "' already exists in " .. check_dir,
+							vim.log.levels.ERROR
+						)
+						return nil
+					end
+					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+				end
+				local result = {}
+				local subdir_map = {
+					["Index"] = indexes_dir,
+					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
+					["Date-bc"] = indexes_dir .. "/Dates/BC",
+					["Date-year"] = indexes_dir .. "/Dates/Years",
+					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
+					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
+					["Topic"] = topics_dir,
+					["Book"] = notes_dir .. "/Books",
+					["Company-brand"] = notes_dir .. "/Companies/Brand",
+					["Company-distributor"] = notes_dir .. "/Companies/DST",
+					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
+					["Item"] = notes_dir .. "/Items",
+					["People-figure"] = notes_dir .. "/People/Figures",
+					["Quotation"] = notes_dir .. "/Quotas",
+				}
+				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
+				for _, file in ipairs(files) do
+					local name = vim.fn.fnamemodify(file, ":t:r")
+					name = name:sub(1, 1):upper() .. name:sub(2)
+					local key = name:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", "")
+					local subdir = subdir_map[name] or notes_dir
+					result[key] = { notes_subdir = subdir }
+					if name == "Quotation" then
+						result[key].note_id_func = function()
+							return "quo-" .. tostring(os.time())
+						end
+					elseif name == "Date" then
+						result[key].note_id_func = function(title)
+							return conflict_check(title, indexes_dir .. "/Calendar/")
+						end
+					elseif name == "Calendar" then
+						result[key].note_id_func = function(title)
+							if title == nil then
+								title = os.date("%Y-%m-%d")
+							end
+							return conflict_check(title, indexes_dir .. "/Dates/")
+						end
+					end
+				end
+				return result
+			end)(),
+		},
+		-- matches daily notes core plugin behavior
+		daily_notes = {
+			enabled = true,
+			folder = notes_dir .. "/Daily",
+			template = "daily",
+			date_format = "YYYY-MM-DD-ddd",
+			alias_format = nil,
+			default_tags = { "daily" },
+			workdays_only = false,
+		},
+	},
+}
+return M
