@@ -267,6 +267,7 @@ return {
 
 	{
 		"mshnwq/obsidian.nvim", -- switch when merged
+		-- event = nvim-obsidian-script enables it
 		version = "*", --latest
 		build = function()
 			local file = vim.fn.stdpath("data") .. "/lazy/obsidian.nvim/lua/obsidian/search/ripgrep.lua"

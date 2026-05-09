@@ -19,6 +19,7 @@ local months = {
 	"November",
 	"December",
 }
+local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local M = {
 	keys = {
 		{ "<leader>on", ":Obsidian new " }, -- args: title
@@ -81,7 +82,7 @@ local M = {
 		},
 		callbacks = {
 			-- post_write_note = function()
-			-- 	vim.cmd("Obsidian open")
+			-- 	vim.cmd("Obsidian open") -- sync scroll
 			-- end,
 			pre_write_note = function(note)
 				local path = tostring(note.path)
@@ -94,7 +95,6 @@ local M = {
 					_pre_write_running[path] = nil
 					return
 				end
-				local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 				local t = os.date("*t")
 				local hour = t.hour % 12
 				if hour == 0 then
@@ -121,7 +121,7 @@ local M = {
 					elseif in_frontmatter and line == "---" then
 						break
 					elseif in_frontmatter then
-						local tag = line:match("^(%w+)_track:")
+						local tag = line:match("^track_project_(%w+):")
 						if tag then
 							tracked_tags[tag] = true
 						end
@@ -131,9 +131,9 @@ local M = {
 				if next(tracked_tags) then
 					for _, line in ipairs(lines) do
 						local clean = line:gsub("%s+$", "")
-						local h, m, ap, marker, tag = clean:match("^### (%d+):(%d+) ([AaPp][Mm]) (start) #Task/(%w+)")
+						local h, m, ap, marker, tag = clean:match("^(%d+):(%d+) ([AaPp][Mm]) (start) #project/(%w+)")
 						if not h then
-							h, m, ap, marker, tag = clean:match("^### (%d+):(%d+) ([AaPp][Mm]) (end) #Task/(%w+)")
+							h, m, ap, marker, tag = clean:match("^(%d+):(%d+) ([AaPp][Mm]) (end) #project/(%w+)")
 						end
 						if h and tag and tracked_tags[tag] then
 							if not result[tag] then
@@ -159,7 +159,7 @@ local M = {
 						lines[i] = string.format('updated_on: "%s"', timestamp)
 					end
 					for tag, times in pairs(result) do
-						local key = tag .. "_track"
+						local key = "track_project_" .. tag
 						if line:match("^" .. key .. ":") then
 							if times.start and times["end"] then
 								local diff = times["end"] - times.start
