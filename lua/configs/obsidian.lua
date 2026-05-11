@@ -1,6 +1,7 @@
 -- lua/configs/obsidian.lua
 local vault = "~/Documents/Obsidian/Home"
 local bin_dir = "~/Documents/NeoVim/bin"
+local inbox_dir = "0_Inbox"
 local notes_dir = "1_Notes"
 local topics_dir = "2_Topics"
 local indexes_dir = "3_Indexes"
@@ -299,13 +300,7 @@ local M = {
 				end
 				local result = {}
 				local subdir_map = {
-					["Index"] = indexes_dir,
-					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
-					["Date-bc"] = indexes_dir .. "/Dates/BC",
-					["Date-year"] = indexes_dir .. "/Dates/Years",
-					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
-					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
-					["Topic"] = topics_dir,
+					["Default"] = inbox_dir,
 					["Book"] = notes_dir .. "/Books",
 					["Company-brand"] = notes_dir .. "/Companies/Brand",
 					["Company-distributor"] = notes_dir .. "/Companies/DST",
@@ -313,6 +308,13 @@ local M = {
 					["Item"] = notes_dir .. "/Items",
 					["People-figure"] = notes_dir .. "/People/Figures",
 					["Quotation"] = notes_dir .. "/Quotas",
+					["Topic"] = topics_dir,
+					["Index"] = indexes_dir,
+					["Date-bc-year"] = indexes_dir .. "/Dates/BC/Years",
+					["Date-bc"] = indexes_dir .. "/Dates/BC",
+					["Date-year"] = indexes_dir .. "/Dates/Years",
+					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
+					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
 				}
 				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
 				for _, file in ipairs(files) do
