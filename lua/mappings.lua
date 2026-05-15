@@ -17,7 +17,11 @@ for i = 1, 6 do
 	end, { desc = "Go to buffer " .. i })
 end
 map("n", "<leader><leader>", function()
-	vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-6>", true, false, true), "n", true)
+	vim.api.nvim_feedkeys(
+		vim.api.nvim_replace_termcodes("<C-6>", true, false, true),
+		"n",
+		true
+	)
 end, { desc = "Last Buffer" })
 
 map("n", "<A-k>", "<Cmd>t-1<CR>")
@@ -55,7 +59,12 @@ map("n", "<leader>mf", function()
 	require("conform").format({ formatters = { "injected" }, timeout_ms = 1500 })
 end, { desc = "Injected Formater" })
 
-map("n", "<leader>do", "<Cmd> lua vim.diagnostic.open_float() <CR>", { desc = "Show diagnostic" })
+map(
+	"n",
+	"<leader>do",
+	"<Cmd> lua vim.diagnostic.open_float() <CR>",
+	{ desc = "Show diagnostic" }
+)
 map("n", "<leader>dc", function()
 	local line = vim.api.nvim_win_get_cursor(0)[1] - 1 -- get current line (0-indexed)
 	local diagnostics = vim.diagnostic.get(0, { lnum = line })
@@ -75,9 +84,19 @@ end, { desc = "Copy diagnostic" })
 
 nomap("n", "<leader>ma")
 nomap("n", "<leader>fm")
-map("n", "<leader>fm", "<Cmd>Telescope marks<CR>", { desc = "telescope find marks" })
+map(
+	"n",
+	"<leader>fm",
+	"<Cmd>Telescope marks<CR>",
+	{ desc = "telescope find marks" }
+)
 nomap("n", "<leader>cm")
-map("n", "<leader>gc", "<Cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
+map(
+	"n",
+	"<leader>gc",
+	"<Cmd>Telescope git_commits<CR>",
+	{ desc = "telescope git commits" }
+)
 map("n", "<leader>gs", "<Cmd>!sh OpenApps --serie<CR>", { desc = "Open Serie" })
 
 -- Tabs
@@ -90,43 +109,110 @@ map("n", "<leader><A-q>", "<Cmd> tabclose <CR>", { desc = "Close Tab" })
 
 -- Windows
 map("n", "<leader>X", "<Cmd> %bd|e# <CR>", { desc = "buffer close all" })
-map("n", "<leader><A-->", "<Cmd> sp <CR>", { desc = "Split window horizontally" })
-map("n", "<leader><A-\\>", "<Cmd> vsp <CR>", { desc = "Split window vertically" })
+map(
+	"n",
+	"<leader><A-->",
+	"<Cmd> sp <CR>",
+	{ desc = "Split window horizontally" }
+)
+map(
+	"n",
+	"<leader><A-\\>",
+	"<Cmd> vsp <CR>",
+	{ desc = "Split window vertically" }
+)
 map("n", "<leader><A-w>", "<C-w>q", { desc = "Close Window" })
 
 -- Navigate windows
 vim.keymap.set({ "n", "t" }, "<A-Left>", function()
 	if vim.fn.mode() == "t" then
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n><C-w>h", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(
+				"<C-\\><C-n><C-w>h",
+				true,
+				false,
+				true
+			),
+			"n",
+			true
+		)
 	else
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>h", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes("<C-w>h", true, false, true),
+			"n",
+			true
+		)
 	end
 end, { desc = "Switch window left" })
 vim.keymap.set({ "n", "t" }, "<A-Right>", function()
 	if vim.fn.mode() == "t" then
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n><C-w>l", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(
+				"<C-\\><C-n><C-w>l",
+				true,
+				false,
+				true
+			),
+			"n",
+			true
+		)
 	else
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>l", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes("<C-w>l", true, false, true),
+			"n",
+			true
+		)
 	end
 end, { desc = "Switch window right" })
 vim.keymap.set({ "n", "t" }, "<A-Down>", function()
 	if vim.fn.mode() == "t" then
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n><C-w>j", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(
+				"<C-\\><C-n><C-w>j",
+				true,
+				false,
+				true
+			),
+			"n",
+			true
+		)
 	else
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>j", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes("<C-w>j", true, false, true),
+			"n",
+			true
+		)
 	end
 end, { desc = "Switch window down" })
 vim.keymap.set({ "n", "t" }, "<A-Up>", function()
 	if vim.fn.mode() == "t" then
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-\\><C-n><C-w>k", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes(
+				"<C-\\><C-n><C-w>k",
+				true,
+				false,
+				true
+			),
+			"n",
+			true
+		)
 	else
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>k", true, false, true), "n", true)
+		vim.api.nvim_feedkeys(
+			vim.api.nvim_replace_termcodes("<C-w>k", true, false, true),
+			"n",
+			true
+		)
 	end
 end, { desc = "Switch window up" })
 
 -- NvimTree
 nomap("n", "<C-n>")
-map("n", "<C-e>", "<Cmd>NvimTreeToggle<CR>", { desc = "nvimtree toggle window" })
+map(
+	"n",
+	"<C-e>",
+	"<Cmd>NvimTreeToggle<CR>",
+	{ desc = "nvimtree toggle window" }
+)
 
 -- Terminal mappings
 nomap("n", "<leader>h")
@@ -146,15 +232,34 @@ local function get_shell()
 	return ""
 end
 
-map("n", "<A-=>", "<Cmd>Telescope terms<CR>", { desc = "telescope pick hidden term" })
+map(
+	"n",
+	"<A-=>",
+	"<Cmd>Telescope terms<CR>",
+	{ desc = "telescope pick hidden term" }
+)
 map({ "n", "t" }, "<A-\\>", function()
-	require("nvchad.term").toggle({ pos = "vsp", id = "vtoggleTerm", size = 0.325, cmd = get_shell() })
+	require("nvchad.term").toggle({
+		pos = "vsp",
+		id = "vtoggleTerm",
+		size = 0.325,
+		cmd = get_shell(),
+	})
 end, { desc = "vterm" })
 map({ "n", "t" }, "<A-->", function()
-	require("nvchad.term").toggle({ pos = "sp", id = "htoggleTerm", size = 0.275, cmd = get_shell() })
+	require("nvchad.term").toggle({
+		pos = "sp",
+		id = "htoggleTerm",
+		size = 0.275,
+		cmd = get_shell(),
+	})
 end, { desc = "hterm" })
 map({ "n", "t" }, "<A-f>", function()
-	require("nvchad.term").toggle({ pos = "float", id = "floatTerm", cmd = get_shell() })
+	require("nvchad.term").toggle({
+		pos = "float",
+		id = "floatTerm",
+		cmd = get_shell(),
+	})
 end, { desc = "floating term" })
 
 map({ "n", "t" }, "<A-]>", function()
@@ -195,8 +300,18 @@ map(
 	"<Cmd>lua require('telescope').extensions.worktrees.list_worktrees(opts)<CR>",
 	{ desc = "Manage Worktree" }
 )
-map("n", "<leader>gwb", "<Cmd>GitWorktreeCreateExisting<CR>", { desc = "Create Existing Worktree" })
-map("n", "<leader>gwc", "<Cmd>GitWorktreeCreate<CR>", { desc = "Create New Worktree" })
+map(
+	"n",
+	"<leader>gwb",
+	"<Cmd>GitWorktreeCreateExisting<CR>",
+	{ desc = "Create Existing Worktree" }
+)
+map(
+	"n",
+	"<leader>gwc",
+	"<Cmd>GitWorktreeCreate<CR>",
+	{ desc = "Create New Worktree" }
+)
 
 -- Todo
 map("n", "]t", function()
@@ -391,4 +506,175 @@ for level = 1, 4 do
 	end, { desc = "[P]Fold all headings level " .. level .. " or above" })
 end
 
-map("n", "<leader>db", "<Cmd>CopyCodeBlock<CR>", { desc = "Copy code block contents" })
+map(
+	"n",
+	"<leader>db",
+	"<Cmd>CopyCodeBlock<CR>",
+	{ desc = "Copy code block contents" }
+)
+
+-- Crate new task or checkbox
+map("n", "<leader>cn", function()
+	-- Get the current line/row/column
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local row, _ = cursor_pos[1], cursor_pos[2]
+	local line = vim.api.nvim_get_current_line()
+	-- 1) If line is empty => replace it with "- [ ] " and set cursor after the brackets
+	if line:match("^%s*$") then
+		local final_line = "- [ ] "
+		vim.api.nvim_set_current_line(final_line)
+		-- "- [ ] " is 6 characters, so cursor col = 6 places you *after* that space
+		vim.api.nvim_win_set_cursor(0, { row, 6 })
+		return
+	end
+	-- 2) Check if line already has a bullet with possible indentation: e.g. "  - Something"
+	--    We'll capture "  -" (including trailing spaces) as `bullet` plus the rest as `text`.
+	local bullet, text = line:match("^([%s]*[-*]%s+)(.*)$")
+	if bullet then
+		-- Convert bullet => bullet .. "[ ] " .. text
+		local final_line = bullet .. "[ ] " .. text
+		vim.api.nvim_set_current_line(final_line)
+		-- Place the cursor right after "[ ] "
+		-- bullet length + "[ ] " is bullet_len + 4 characters,
+		-- but bullet has trailing spaces, so #bullet includes those.
+		local bullet_len = #bullet
+		-- We want to land after the brackets (four characters: `[ ] `),
+		-- so col = bullet_len + 4 (0-based).
+		vim.api.nvim_win_set_cursor(0, { row, bullet_len + 4 })
+		return
+	end
+	-- 3) If there's text, but no bullet => prepend "- [ ] "
+	--    and place cursor after the brackets
+	local final_line = "- [ ] " .. line
+	vim.api.nvim_set_current_line(final_line)
+	-- "- [ ] " is 6 characters
+	vim.api.nvim_win_set_cursor(0, { row, 6 })
+end, { desc = "Convert bullet to a task or insert new task bullet" })
+
+-- Priority emojis matching Obsidian Tasks plugin format
+local priorities = {
+	["1"] = "🔺",
+	["2"] = "⏫",
+	["3"] = "🔼",
+	["4"] = "🔽",
+	["5"] = "⏬",
+}
+for level, emoji in pairs(priorities) do
+	map("n", "<leader>c" .. level, function()
+		local line = vim.api.nvim_get_current_line()
+		-- Only act on task lines (must have "- [ ]" or "- [x]")
+		if not line:match("^%s*[-*]%s+%[.%]") then
+			vim.notify("Not a task line", vim.log.levels.WARN)
+			return
+		end
+		-- Remove any existing priority emoji before setting new one
+		local cleaned = line:gsub("%s*🔺$", "")
+			:gsub("%s*⏫$", "")
+			:gsub("%s*🔼$", "")
+			:gsub("%s*🔽$", "")
+			:gsub("%s*⏬$", "")
+		local final_line = cleaned .. " " .. emoji
+		vim.api.nvim_set_current_line(final_line)
+		local row = vim.api.nvim_win_get_cursor(0)[1]
+		vim.api.nvim_win_set_cursor(0, { row, #final_line })
+	end, { desc = "Set task priority " .. level .. " (" .. emoji .. ")" })
+end
+
+vim.keymap.set("n", "<leader>cx", function()
+	local tasks_heading = "### Completed"
+	vim.cmd("mkview")
+	local api = vim.api
+	local buf = api.nvim_get_current_buf()
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local start_line = cursor_pos[1] - 1
+	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+	local total_lines = #lines
+	if start_line >= total_lines then
+		vim.cmd("loadview")
+		return
+	end
+	--  Move upwards to find the bullet line
+	while start_line > 0 do
+		local line_text = lines[start_line + 1]
+		if line_text == "" or line_text:match("^%s*%-") then
+			break
+		end
+		start_line = start_line - 1
+	end
+	if lines[start_line + 1] == "" and start_line < (total_lines - 1) then
+		start_line = start_line + 1
+	end
+	-- Validate it's a task bullet
+	local bullet_line = lines[start_line + 1]
+	if not bullet_line:match("^%s*%- %[[x ]%]") then
+		print("Not a task bullet: no action taken.")
+		vim.cmd("loadview")
+		return
+	end
+	-- Identify chunk boundaries
+	local chunk_start = start_line
+	local chunk_end = start_line
+	while chunk_end + 1 < total_lines do
+		local next_line = lines[chunk_end + 2]
+		if next_line == "" or next_line:match("^%s*%-") then
+			break
+		end
+		chunk_end = chunk_end + 1
+	end
+	local chunk = {}
+	for i = chunk_start, chunk_end do
+		table.insert(chunk, lines[i + 1])
+	end
+	-- Only act if task is NOT already done
+	if chunk[1]:match("^%s*%- %[x%]") then
+		print("Task already completed: no action taken.")
+		vim.cmd("loadview")
+		return
+	end
+	-- Mark as done (no label, no timestamp)
+	chunk[1] = chunk[1]:gsub("^(%s*%- )%[%s*%]", "%1[x]")
+	-- Remove chunk from original position
+	local win = api.nvim_get_current_win()
+	local view = api.nvim_win_call(win, function()
+		return vim.fn.winsaveview()
+	end)
+	for i = chunk_end, chunk_start, -1 do
+		table.remove(lines, i + 1)
+	end
+	-- Insert under ### Completed with a blank line after heading
+	local heading_index = nil
+	for i, line in ipairs(lines) do
+		if line:match("^" .. tasks_heading) then
+			heading_index = i
+			break
+		end
+	end
+	if heading_index then
+		-- Ensure blank line exists right after the heading
+		if lines[heading_index + 1] ~= "" then
+			table.insert(lines, heading_index + 1, "")
+		end
+		-- Insert chunk after the blank line
+		local insert_at = heading_index + 1
+		for j, cLine in ipairs(chunk) do
+			table.insert(lines, insert_at + j, cLine)
+		end
+	else
+		-- Create heading with blank line before the tasks
+		table.insert(lines, "")
+		table.insert(lines, tasks_heading)
+		table.insert(lines, "")
+		for _, cLine in ipairs(chunk) do
+			table.insert(lines, cLine)
+		end
+	end
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	vim.notify("Completed", vim.log.levels.INFO)
+	api.nvim_win_call(win, function()
+		vim.fn.winrestview(view)
+	end)
+	vim.cmd("silent update")
+	vim.cmd("loadview")
+end, { desc = "Toggle task done and move to '### Completed'" })
+
+-- Add Telescope tasks and done

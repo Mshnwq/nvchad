@@ -132,9 +132,13 @@ local M = {
 				if next(tracked_tags) then
 					for _, line in ipairs(lines) do
 						local clean = line:gsub("%s+$", "")
-						local h, m, ap, marker, tag = clean:match("^(%d+):(%d+) ([AaPp][Mm]) (start) #project/(%w+)")
+						local h, m, ap, marker, tag = clean:match(
+							"^(%d+):(%d+) ([AaPp][Mm]) (start) #project/(%w+)"
+						)
 						if not h then
-							h, m, ap, marker, tag = clean:match("^(%d+):(%d+) ([AaPp][Mm]) (end) #project/(%w+)")
+							h, m, ap, marker, tag = clean:match(
+								"^(%d+):(%d+) ([AaPp][Mm]) (end) #project/(%w+)"
+							)
 						end
 						if h and tag and tracked_tags[tag] then
 							if not result[tag] then
@@ -156,7 +160,9 @@ local M = {
 					if line:match("^id:") then
 						lines[i] = string.format('id: "%s"', tostring(note.id))
 					end
-					if vim.bo[bufnr].modified and line:match("^updated_on:") then
+					if
+						vim.bo[bufnr].modified and line:match("^updated_on:")
+					then
 						lines[i] = string.format('updated_on: "%s"', timestamp)
 					end
 					for tag, times in pairs(result) do
@@ -169,7 +175,12 @@ local M = {
 								end
 								local dh = math.floor(diff / 60)
 								local dm = diff % 60
-								lines[i] = string.format('%s: "%02d:%02d"', key, dh, dm)
+								lines[i] = string.format(
+									'%s: "%02d:%02d"',
+									key,
+									dh,
+									dm
+								)
 							end
 						end
 					end
@@ -201,9 +212,9 @@ local M = {
 					require("obsidian.api").nav_link("prev")
 					vim.cmd("normal! zz")
 				end, { buffer = true, desc = "Obsidian Prev Link" })
-				vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
-					buffer = true,
-				})
+				-- vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
+				-- 	buffer = true,
+				-- })
 			end,
 		},
 		attachments = {
@@ -250,8 +261,17 @@ local M = {
 			folder = "_templates",
 			substitutions = {
 				calendar = function(ctx, suffix)
-					local date = ctx.partial_note and ctx.partial_note:display_name() or ""
-					local handle = io.popen(bin_dir .. "/calendar " .. date .. " --" .. suffix .. "-latin")
+					local date = ctx.partial_note
+							and ctx.partial_note:display_name()
+						or ""
+					local handle = io.popen(
+						bin_dir
+							.. "/calendar "
+							.. date
+							.. " --"
+							.. suffix
+							.. "-latin"
+					)
 					if handle ~= nil then
 						local result = handle:read("*l")
 						handle:close()
@@ -259,24 +279,40 @@ local M = {
 					end
 				end,
 				gregorian_date_dd_mmmm_yy = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local name = ctx.partial_note
+							and ctx.partial_note:display_name()
+						or ""
 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
 					if not y then
 						return ""
 					end
-					return string.format("%d %s %d", tonumber(d), months[tonumber(m)], tonumber((y:gsub("^-", ""))))
+					return string.format(
+						"%d %s %d",
+						tonumber(d),
+						months[tonumber(m)],
+						tonumber((y:gsub("^-", "")))
+					)
 				end,
 				gregorian_date_mmmm_dd_yy = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local name = ctx.partial_note
+							and ctx.partial_note:display_name()
+						or ""
 					local y, m, d = name:match("^(-?%d+)-(%d+)-(%d+)$")
 					if not y then
 						return ""
 					end
-					return string.format("%s %d, %d", months[tonumber(m)], tonumber(d), tonumber((y:gsub("^-", ""))))
+					return string.format(
+						"%s %d, %d",
+						months[tonumber(m)],
+						tonumber(d),
+						tonumber((y:gsub("^-", "")))
+					)
 				end,
 				-- solves zero truncation and negative dates issues
 				absolute_date = function(ctx)
-					local name = ctx.partial_note and ctx.partial_note:display_name() or ""
+					local name = ctx.partial_note
+							and ctx.partial_note:display_name()
+						or ""
 					local n = tonumber((name:gsub("^-", "")))
 					if not n then
 						return ""
@@ -291,17 +327,24 @@ local M = {
 					end
 					if vim.fn.glob(check_dir .. title .. ".md") ~= "" then
 						vim.notify(
-							"[obsidian] ID conflict: '" .. title .. "' already exists in " .. check_dir,
+							"[obsidian] ID conflict: '"
+								.. title
+								.. "' already exists in "
+								.. check_dir,
 							vim.log.levels.ERROR
 						)
 						return nil
 					end
-					return title:gsub(" ", "-"):gsub("[^A-Za-z0-9-]", ""):lower()
+					return title
+						:gsub(" ", "-")
+						:gsub("[^A-Za-z0-9-]", "")
+						:lower()
 				end
 				local result = {}
 				local subdir_map = {
 					["Default"] = inbox_dir,
 					["Book"] = notes_dir .. "/Books",
+					["Event"] = notes_dir .. "/Events",
 					["Company-brand"] = notes_dir .. "/Companies/Brand",
 					["Company-distributor"] = notes_dir .. "/Companies/DST",
 					["Contact-distributor"] = notes_dir .. "/Contacts/DST",
@@ -316,7 +359,8 @@ local M = {
 					["Date"] = indexes_dir .. "/Dates", -- be mindful of id conflict
 					["Calendar"] = indexes_dir .. "/Calendar", -- be mindful of id conflict
 				}
-				local files = vim.fn.glob(vault .. "/_templates/*.md", false, true)
+				local files =
+					vim.fn.glob(vault .. "/_templates/*.md", false, true)
 				for _, file in ipairs(files) do
 					local name = vim.fn.fnamemodify(file, ":t:r")
 					name = name:sub(1, 1):upper() .. name:sub(2)
@@ -329,14 +373,20 @@ local M = {
 						end
 					elseif name == "Date" then
 						result[key].note_id_func = function(title)
-							return conflict_check(title, indexes_dir .. "/Calendar/")
+							return conflict_check(
+								title,
+								indexes_dir .. "/Calendar/"
+							)
 						end
 					elseif name == "Calendar" then
 						result[key].note_id_func = function(title)
 							if title == nil then
 								title = os.date("%Y-%m-%d")
 							end
-							return conflict_check(title, indexes_dir .. "/Dates/")
+							return conflict_check(
+								title,
+								indexes_dir .. "/Dates/"
+							)
 						end
 					end
 				end
