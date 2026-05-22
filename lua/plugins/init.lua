@@ -56,11 +56,23 @@ return {
 					-- signs = false, -- configure signs for some keywords individually
 				},
 				TODO = { icon = " ", color = "info" },
-				WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+				WARN = {
+					icon = " ",
+					color = "warning",
+					alt = { "WARNING", "XXX" },
+				},
 				HACK = { icon = " ", color = "hint" },
-				PERF = { icon = " ", color = "hint", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+				PERF = {
+					icon = " ",
+					color = "hint",
+					alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" },
+				},
 				NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-				TEST = { icon = "󰂓 ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+				TEST = {
+					icon = "󰂓 ",
+					color = "test",
+					alt = { "TESTING", "PASSED", "FAILED" },
+				},
 			},
 			colors = {
 				error = { "TodoError" },
@@ -163,58 +175,20 @@ return {
 		"L3MON4D3/LuaSnip",
 		version = "v2.*",
 		build = "make install_jsregexp",
-		require("luasnip.loaders.from_lua").load({ paths = "~/Documents/NeoVim/snip/" }),
+		require("luasnip.loaders.from_lua").load({
+			paths = "~/Documents/NeoVim/snip/",
+		}),
 	},
-
-	-- AI helpers
-	--{
-	--  "zbirenbaum/copilot.lua",
-	--  cmd = "Copilot",
-	--  event = "InsertEnter",
-	--  config = function()
-	--    return require("configs.copilot")
-	--  end,
-	--},
-	--{
-	--  "zbirenbaum/copilot-cmp",
-	--  event = "InsertEnter",
-	--  config = function()
-	--    require("copilot_cmp").setup()
-	--  end,
-	--  dependencies = {
-	--    "zbirenbaum/copilot.lua",
-	--    -- cmd = "Copilot",
-	--    -- config = function()
-	--    --   require("copilot").setup({
-	--    --     suggestion = { enabled = false },
-	--    --     panel = { enabled = false },
-	--    --   })
-	--    -- end,
-	--  },
-	--},
-
-	-- {
-	--   "jackMort/ChatGPT.nvim",
-	--   event = "VeryLazy",
-	--   config = function()
-	--     require("chatgpt").setup()
-	--     require("chatgpt").setup({
-	--       api_key_cmd = 'pass show mshnwq/chatgpt-api',
-	--     })
-	--   end,
-	--   dependencies = {
-	--     "MunifTanjim/nui.nvim",
-	--     "nvim-lua/plenary.nvim",
-	--     "folke/trouble.nvim", -- optional
-	--     "nvim-telescope/telescope.nvim"
-	--   }
-	-- },
 
 	{
 		"lervag/vimtex",
 		lazy = false,
 		keys = {
-			{ "<leader>ml", "<Cmd>VimtexCompile<CR>", { desc = "Toggle Latex" } },
+			{
+				"<leader>ml",
+				"<Cmd>VimtexCompile<CR>",
+				{ desc = "Toggle Latex" },
+			},
 		},
 		init = function()
 			vim.g.vimtex_view_method = "zathura"
@@ -258,7 +232,8 @@ return {
 				file1,
 				'  ["base"]     = { icon = "", color = "#CBCB41", cterm_color = "185", name = "Base"                         },'
 			)
-			local file2 = vim.fn.stdpath("data") .. "/lazy/nvim-web-devicons/lua/nvim-web-devicons/filetypes.lua"
+			local file2 = vim.fn.stdpath("data")
+				.. "/lazy/nvim-web-devicons/lua/nvim-web-devicons/filetypes.lua"
 			prepend_before_last(file2, '  ["dataviewjs"] = "dataviewjs",')
 			prepend_before_last(file2, '  ["base"] = "base",')
 		end,
@@ -266,20 +241,11 @@ return {
 	},
 
 	{
-		"mshnwq/obsidian.nvim", -- switch when merged
+		"mshnwq/obsidian.nvim", -- my outgoing link fork
+		-- "obsidian-nvim/obsidian.nvim", -- switch when merged
 		-- event = nvim-obsidian-script enables it
 		version = "*", --latest
-		build = function()
-			local file = vim.fn.stdpath("data") .. "/lazy/obsidian.nvim/lua/obsidian/search/ripgrep.lua"
-			local content = table.concat(vim.fn.readfile(file), "\n")
-			content =
-				content:gsub("local additional_opts = {}", 'local additional_opts = { "--glob", "!_templates/**" }')
-			vim.fn.writefile(vim.split(content, "\n"), file)
-		end,
-		event = {
-			"BufReadPre " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-			"BufNewFile " .. vim.fn.expand("~/Documents/Obsidian/**.md"),
-		},
+		build = require("configs.obsidian").build,
 		keys = require("configs.obsidian").keys,
 		opts = require("configs.obsidian").opts,
 	},
@@ -287,40 +253,13 @@ return {
 		"MeanderingProgrammer/render-markdown.nvim",
 		-- event = nvim-obsidian-script enables it
 		-- apply quote callout patch
-		build = function()
-			local file = vim.fn.stdpath("data")
-				.. "/lazy/render-markdown.nvim/lua/render-markdown/render/markdown/quote.lua"
-			local content = table.concat(vim.fn.readfile(file), "\n")
-			content = content:gsub(
-				"virt_text = { { title or config.rendered, config.highlight } }",
-				"virt_text = { { title or config%.rendered %.%. %" .. "' '" .. ', "RenderMarkdownQuoteTitle" } }'
-			)
-			content = content:gsub("return icon .. ' ' .. title", "return icon %.%. ' ' %.%. title %.%. ' '")
-			content = content:gsub(
-				"virt_text = { { self.data.icon, self.data.highlight } }",
-				'virt_text = { { self%.data%.icon, "RenderMarkdownQuoteIcon" } }'
-			)
-			vim.fn.writefile(vim.split(content, "\n"), file)
-		end,
-		keys = {
-			map("n", "<leader>mt", function()
-				require("lazy").load({ plugins = { "render-markdown.nvim" } })
-				require("render-markdown").buf_toggle()
-			end, { desc = "Toggle Buffer Render Markdown" }),
-			map("n", "<leader>mT", function()
-				require("lazy").load({ plugins = { "render-markdown.nvim" } })
-				require("render-markdown").toggle()
-			end, { desc = "Toggle Render Markdown" }),
-			map("n", "<leader>mv", function()
-				require("lazy").load({ plugins = { "render-markdown.nvim" } })
-				require("render-markdown").preview()
-			end, { desc = "Preview Render Markdown" }),
-		},
 		dependencies = {
 			"nvim-treesitter/nvim-treesitter",
 			"nvim-mini/mini.nvim",
 		},
-		opts = require("configs.markdown"),
+		build = require("configs.markdown").build,
+		keys = require("configs.markdown").keys,
+		opts = require("configs.markdown").opts,
 	},
 	{
 		"hedyhli/outline.nvim",

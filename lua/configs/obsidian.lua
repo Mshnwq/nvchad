@@ -22,6 +22,20 @@ local months = {
 }
 local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 local M = {
+	build = function()
+		local file = vim.fn.stdpath("data")
+			.. "/lazy/obsidian.nvim/lua/obsidian/search/ripgrep.lua"
+		local content = table.concat(vim.fn.readfile(file), "\n")
+		content = content:gsub(
+			"local additional_opts = {}",
+			'local additional_opts = { "--glob", "!_templates/**" }'
+		)
+		vim.fn.writefile(vim.split(content, "\n"), file)
+	end,
+	event = {
+		"BufReadPre " .. vim.fn.expand(vault .. "/**.md"),
+		"BufNewFile " .. vim.fn.expand(vault .. "/**.md"),
+	},
 	keys = {
 		{ "<leader>on", ":Obsidian new " }, -- args: title
 		{ "<leader>om", ":Obsidian toc<cr>" },
@@ -81,6 +95,7 @@ local M = {
 				end
 			end,
 		},
+		-- NOTE: Obsidian LSP needs to load for this to work
 		callbacks = {
 			-- post_write_note = function()
 			-- 	vim.cmd("Obsidian open") -- sync scroll
