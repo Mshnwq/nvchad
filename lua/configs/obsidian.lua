@@ -216,7 +216,8 @@ local M = {
 				end)
 			end,
 			enter_note = function()
-				vim.keymap.del("n", "<CR>", { buffer = true })
+				-- TODO: Broken
+				-- vim.keymap.del("n", "<CR>", { buffer = true })
 				vim.keymap.del("n", "]o", { buffer = true })
 				vim.keymap.del("n", "[o", { buffer = true })
 				vim.keymap.set("n", "]o", function()
@@ -227,9 +228,14 @@ local M = {
 					require("obsidian.api").nav_link("prev")
 					vim.cmd("normal! zz")
 				end, { buffer = true, desc = "Obsidian Prev Link" })
-				-- vim.keymap.set("n", "<leader>c", "<cmd>Obsidian toggle_checkbox<cr>", {
-				-- 	buffer = true,
-				-- })
+				vim.keymap.set(
+					"n",
+					"<leader>co",
+					"<cmd>Obsidian toggle_checkbox<cr>",
+					{
+						buffer = true,
+					}
+				)
 			end,
 		},
 		attachments = {
